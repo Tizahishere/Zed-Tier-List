@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zed Tier List</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 { color: #333; }
+    p.description { color: #555; font-size: 18px; margin-top: -10px; margin-bottom: 30px; }
+
+    #searchContainer { margin-bottom: 30px; }
+    #searchInput { padding: 10px; font-size: 16px; width: 250px; border-radius: 5px; border: 1px solid #aaa; }
+    #searchButton { padding: 10px 15px; font-size: 16px; border-radius: 5px; border: none; background-color: #333; color: white; cursor: pointer; margin-left: 5px; }
+    #searchButton:hover { background-color: #555; }
+
+    .tier-row { display: flex; justify-content: center; margin-bottom: 20px; gap: 20px; flex-wrap: wrap; }
+    .player-card { background-color: #fff; width: 200px; padding: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
+    .player-card:hover { transform: scale(1.05); }
+    .player-name { font-size: 18px; color: #333; margin-bottom: 5px; }
+    .player-tier { font-size: 16px; color: #666; }
+    #result { margin-top: 20px; font-size: 18px; color: #333; }
+  </style>
+</head>
+<body>
+
+<h1>-- ZED TIER LIST --</h1>
+<p class="description">A Tier list for Builders, Redstoners, and Macers</p>
+
+<div id="searchContainer">
+  <input type="text" id="searchInput" placeholder="Enter player name...">
+  <button id="searchButton">Search</button>
+</div>
+
+<div id="result"></div>
+
+<div id="playersContainer"></div>
+
+<script>
+  // === FRIENDLY DATA STRUCTURE ===
+  // Add new players here. Just add a new object to the array.
+  const playersData = [
+     { name: "SolarFX", tier: "HT1", category: "Redstone " },
+     { name: "EnderBeacon", tier: "LT1", category: "Mace"},
+    { name: "Sadbeacon", tier: "LT4", category: "Mace" },
+    { name: "Unknown1", tier: "LT1", category: "Redstone" },
+    { name: "Unknown1", tier: "HT2", category: "Building" },
+    { name: "Unknown1", tier: "LT2", category: "Redstone" },
+    { name: "Unknown1", tier: "HT3", category: "Building" },
+    { name: "Unknown1", tier: "LT3", category: "Redstone" },
+    { name: "Unknown1", tier: "HT4", category: "Building" },
+    { name: "Unknown1", tier: "LT4", category: "Redstone" },
+    { name: "Unknown1", tier: "HT5", category: "Building" },
+    { name: "Unknown1", tier: "LT5", category: "Redstone" }
+  ];
+
+  const playersContainer = document.getElementById("playersContainer");
+
+  // Generate tier rows dynamically
+  const tiers = ["1","2","3","4","5"];
+  tiers.forEach(i => {
+    const tierRow = document.createElement("div");
+    tierRow.classList.add("tier-row");
+
+    ["HT"+i,"LT"+i].forEach(tierKey => {
+      playersData
+        .filter(player => player.tier === tierKey)
+        .forEach(player => {
+          const card = document.createElement("div");
+          card.classList.add("player-card");
+          card.dataset.player = player.name;
+          card.dataset.tier = `${player.tier} - ${player.category}`;
+          card.innerHTML = `<div class="player-name">${player.name}</div>
+                            <div class="player-tier">${player.tier} - ${player.category}</div>`;
+          tierRow.appendChild(card);
+        });
+    });
+
+    playersContainer.appendChild(tierRow);
+  });
+
+  // === SEARCH FUNCTIONALITY ===
+  const searchButton = document.getElementById("searchButton");
+  const searchInput = document.getElementById("searchInput");
+  const result = document.getElementById("result");
+  const playerCards = document.querySelectorAll(".player-card");
+
+  function searchPlayer() {
+    const query = searchInput.value.trim().toLowerCase();
+    if (!query) { result.textContent = "Please enter a player name."; return; }
+    let found = false;
+    playerCards.forEach(card => {
+      if (card.dataset.player.toLowerCase() === query) {
+        result.innerHTML = `Player: <b>${card.dataset.player}</b> <br> Tier: <b>${card.dataset.tier}</b>`;
+        found = true;
+      }
+    });
+    if (!found) result.textContent = "Player not ranked.";
+  }
+
+  searchButton.addEventListener("click", searchPlayer);
+  searchInput.addEventListener("keypress", e => { if(e.key === "Enter") searchPlayer(); });
+
+</script>
+</body>
+</html>
