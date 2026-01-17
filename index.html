@@ -12,17 +12,22 @@ body {
   padding: 20px;
   text-align: center;
 }
+
 h1 { color: #333; }
 p.description { color: #555; font-size: 18px; margin-top: -10px; margin-bottom: 30px; }
+
 #searchContainer { margin-bottom: 30px; }
 #searchInput { padding: 10px; font-size: 16px; width: 250px; border-radius: 5px; border: 1px solid #aaa; }
 #searchButton { padding: 10px 15px; font-size: 16px; border-radius: 5px; border: none; background-color: #333; color: white; cursor: pointer; margin-left: 5px; }
 #searchButton:hover { background-color: #555; }
+
 .tier-row { display: flex; justify-content: center; margin-bottom: 20px; gap: 20px; flex-wrap: wrap; }
-.player-card { background-color: #fff; width: 200px; padding: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; }
+.player-card { background-color: #fff; width: 220px; padding: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; text-align: left; }
 .player-card:hover { transform: scale(1.05); }
-.player-name { font-size: 18px; color: #333; margin-bottom: 5px; }
-.player-tier { font-size: 16px; color: #666; }
+.player-name { font-size: 18px; color: #333; margin-bottom: 5px; font-weight: bold; }
+.player-gamemodes { font-size: 14px; color: #666; }
+.player-gamemodes div { margin-bottom: 3px; }
+
 #result { margin-top: 20px; font-size: 18px; color: #333; }
 </style>
 </head>
@@ -32,8 +37,8 @@ p.description { color: #555; font-size: 18px; margin-top: -10px; margin-bottom: 
 <p class="description">A Tier list for Builders, Redstoners, Macers, Crystal PvP, etc.</p>
 
 <div id="searchContainer">
-<input type="text" id="searchInput" placeholder="Enter player name...">
-<button id="searchButton">Search</button>
+  <input type="text" id="searchInput" placeholder="Enter player name...">
+  <button id="searchButton">Search</button>
 </div>
 
 <div id="result"></div>
@@ -58,33 +63,27 @@ const playersData = [
 ];
 
 const playersContainer = document.getElementById("playersContainer");
-const tiers = ["1","2","3","4","5"];
 
-// Generate tier rows dynamically
-tiers.forEach(i => {
-  const tierRow = document.createElement("div");
-  tierRow.classList.add("tier-row");
+// Create a single card per player with all gamemodes
+playersData.forEach(player => {
+  const card = document.createElement("div");
+  card.classList.add("player-card");
+  card.dataset.player = player.name;
 
-  ["HT"+i,"LT"+i].forEach(tierKey => {
-    playersData.forEach(player => {
-      player.gamemodes.forEach(mode => {
-        if(mode.tier === tierKey){
-          const card = document.createElement("div");
-          card.classList.add("player-card");
-          card.dataset.player = player.name;
-          card.dataset.tier = `${mode.tier} - ${mode.category}`;
-          card.innerHTML = `<div class="player-name">${player.name}</div>
-                            <div class="player-tier">${mode.tier} - ${mode.category}</div>`;
-          tierRow.appendChild(card);
-        }
-      });
-    });
+  let gamemodesHTML = '';
+  player.gamemodes.forEach(mode => {
+    gamemodesHTML += `<div>${mode.tier} - ${mode.category}</div>`;
   });
 
-  playersContainer.appendChild(tierRow);
+  card.innerHTML = `
+    <div class="player-name">${player.name}</div>
+    <div class="player-gamemodes">${gamemodesHTML}</div>
+  `;
+
+  playersContainer.appendChild(card);
 });
 
-// === SEARCH FUNCTIONALITY FIXED ===
+// === SEARCH FUNCTIONALITY ===
 const searchButton = document.getElementById("searchButton");
 const searchInput = document.getElementById("searchInput");
 const result = document.getElementById("result");
@@ -93,7 +92,6 @@ function searchPlayer() {
   const query = searchInput.value.trim().toLowerCase();
   if(!query){ result.textContent = "Please enter a player name."; return; }
 
-  // Find the player in playersData
   const player = playersData.find(p => p.name.toLowerCase() === query);
 
   if(!player){
@@ -101,9 +99,8 @@ function searchPlayer() {
     return;
   }
 
-  // Build result with all gamemodes
   let html = `<b>Player: ${player.name}</b><br>Gamemodes:<br>`;
-  player.gamemodes.forEach((mode, idx) => {
+  player.gamemodes.forEach(mode => {
     html += `${mode.tier} - ${mode.category}<br>`;
   });
   result.innerHTML = html;
