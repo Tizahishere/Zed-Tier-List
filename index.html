@@ -2,228 +2,228 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>ZED Tier List</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zed Tier List</title>
 
 <style>
+:root {
+  --bg: #0e0f14;
+  --card: #161821;
+  --text: #eaeaf0;
+  --muted: #9aa0b3;
+  --accent: #7c8cff;
+}
+
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Ubuntu;
-  background: linear-gradient(135deg, #ececec, #f7f7f7);
   margin: 0;
-  padding: 30px;
-  text-align: center;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto;
+  background: var(--bg);
+  color: var(--text);
+  padding: 40px 20px;
 }
 
 h1 {
-  color: #222;
-  letter-spacing: 1px;
+  text-align: center;
+  letter-spacing: 2px;
 }
 
-p.description {
-  color: #666;
-  font-size: 17px;
-  margin-top: -10px;
-  margin-bottom: 35px;
+.description {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 30px;
 }
 
 /* Search */
 #searchContainer {
-  margin-bottom: 30px;
+  text-align: center;
+  margin-bottom: 40px;
 }
 
 #searchInput {
   padding: 12px;
-  font-size: 16px;
   width: 260px;
-  border-radius: 8px;
-  border: 1px solid #bbb;
-  outline: none;
-}
-
-#searchButton {
-  padding: 12px 18px;
-  font-size: 16px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  background: #222;
-  color: white;
-  cursor: pointer;
-  margin-left: 6px;
+  outline: none;
+  font-size: 15px;
 }
 
-#searchButton:hover {
-  background: #444;
-}
-
-/* Cards */
 #playersContainer {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  max-width: 1100px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 22px;
 }
 
+/* Player Card */
 .player-card {
-  background: white;
-  width: 240px;
+  background: var(--card);
+  border-radius: 16px;
   padding: 18px;
-  border-radius: 14px;
-  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
-  text-align: left;
+  box-shadow: 0 10px 30px rgba(0,0,0,.4);
+  transition: transform .15s;
 }
 
 .player-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+  transform: translateY(-6px);
+}
+
+.player-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .player-name {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  margin-bottom: 10px;
-  color: #111;
 }
 
-/* Gamemode pills */
-.player-gamemodes div {
-  background: #f1f1f1;
+.player-score {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.modes {
+  margin-top: 14px;
+}
+
+.mode {
+  display: flex;
+  justify-content: space-between;
+  background: #1f2230;
   padding: 6px 10px;
   border-radius: 8px;
-  font-size: 14px;
   margin-bottom: 6px;
-  color: #333;
+  font-size: 14px;
 }
 
-/* Search result */
-#result {
-  margin-top: 25px;
-  font-size: 18px;
-  color: #222;
+/* Tier Colors */
+.tier-HT1 { color:#00ffcc }
+.tier-HT2 { color:#1aff00 }
+.tier-HT3 { color:#cfff00 }
+.tier-HT4 { color:#ffcc00 }
+.tier-HT5 { color:#ff9900 }
+
+.tier-LT1 { color:#ff6666 }
+.tier-LT2 { color:#ff4d4d }
+.tier-LT3 { color:#ff3333 }
+.tier-LT4 { color:#ff1a1a }
+.tier-LT5 { color:#cc0000 }
+
+.hidden {
+  display: none;
 }
 </style>
 </head>
 <body>
 
-<h1>— ZED TIER LIST —</h1>
-<p class="description">A Tier list for Builders, Redstoners, Macers, Crystal PvP, etc.</p>
-<p class="description">Just a Small Tier List Made with Heart With Full Fairness And no Hackers.</p>
+<h1>ZED TIER LIST</h1>
+<p class="description">Competitive tier rankings inspired by mctiers</p>
+
 <div id="searchContainer">
-  <input type="text" id="searchInput" placeholder="Enter player name...">
-  <button id="searchButton">Search</button>
+  <input id="searchInput" placeholder="Search player...">
 </div>
 
-<div id="result"></div>
 <div id="playersContainer"></div>
 
 <script>
-// === DATA (ADD PLAYERS HERE) ===
-const playersData = [
-   { name: "Rosx342", gamemodes: [
-     {tier: "HT5", category: "Mace"},
-      {tier: "HT3", category: "Building"}
-                                 ] },
-  { name: "ItsDawaldo", gamemodes: [{tier: "HT2", category: "Crystal"}] },
-  { name: "NiklasSpvp", gamemodes: [{tier: "HT3", category: "Crystal"}] },
-  { name: "SilencedMC_", gamemodes: [{tier: "HT3", category: "Mace"}] },
-  { name: "Rosx342", gamemodes: [{tier: "HT5", category: "Mace"}] },
-  { name: "N0TR1XX", gamemodes: [{tier: "HT2", category: "Mace"}] },
+// === TIER POINTS ===
+const tierPoints = {
+  HT1:100, HT2:90, HT3:80, HT4:70, HT5:60,
+  LT1:50,  LT2:40, LT3:30, LT4:20, LT5:10
+};
 
-  { name: "CatBoyNoou3h", gamemodes: [
-    {tier: "LT2", category: "Sword"},
-    {tier: "LT2", category: "Diamond SMP"}
-  ] },
+// === DATA ===
+const players = [
+  {
+    name: "Rosx342",
+    gamemodes: [
+      { tier:"HT5", category:"Mace" },
+      { tier:"HT3", category:"Building" }
+    ]
+  },
+  { name:"ItsDawaldo", gamemodes:[{tier:"HT2", category:"Crystal"}] },
+  { name:"NiklasSpvp", gamemodes:[{tier:"HT3", category:"Crystal"}] },
+  { name:"SilencedMC_", gamemodes:[{tier:"HT3", category:"Mace"}] },
+  { name:"N0TR1XX", gamemodes:[{tier:"HT2", category:"Mace"}] },
 
-  { name: "Ikaris_", gamemodes: [{tier: "LT3", category: "Mace"}] },
+  {
+    name:"CatBoyNoou3h",
+    gamemodes:[
+      {tier:"LT2", category:"Sword"},
+      {tier:"LT2", category:"Diamond SMP"}
+    ]
+  },
 
-  { name: "Carti_v2", gamemodes: [
-    {tier: "HT5", category: "Diamond SMP"},
-    {tier: "HT5", category: "Sword"}
-  ] },
+  {
+    name:"Tizahisnothere",
+    gamemodes:[
+      {tier:"HT5", category:"Crystal"},
+      {tier:"LT5", category:"Mace"},
+      {tier:"LT5", category:"Sword"},
+      {tier:"HT5", category:"SMP"}
+    ]
+  },
 
-  { name: "prystrict", gamemodes: [{tier: "HT3", category: "Mace"}] },
-
-  { name: "Lemon1233210", gamemodes: [
-    {tier: "HT4", category: "Mace"},
-    {tier: "HT2", category: "Sword"},
-     {tier: "HT2", category: "Diamond SMP"},
-    {tier: "HT5", category: "Crystal"}
-  ] },
-
-  { name: "SolarFlare1110", gamemodes: [
-    {tier: "HT1", category: "Redstone"},
-    {tier: "LT1", category: "Building"}
-  ] },
-
-  { name: "EnderBeacon", gamemodes: [
-    {tier: "LT1", category: "Mace"},
-    {tier: "LT5", category: "Crystal"}
-  ] },
-
-  { name: "Sadbeacon", gamemodes: [{tier: "LT3", category: "Mace"}] },
-
-  { name: "Tizahisnothere", gamemodes: [
-    {tier: "HT5", category: "Crystal"},
-    {tier: "LT5", category: "Mace"},
-    {tier: "LT5", category: "Sword"},
-    {tier: "HT5", category: "SMP"}
-  ] },
-  { name: "otonashizero17", gamemodes: [
-    {tier: "HT4", category: "Mace"},
-    {tier: "HT5", category: "Diamond SMP"}
-  ] }
+  {
+    name:"otonashizero17",
+    gamemodes:[
+      {tier:"HT4", category:"Mace"},
+      {tier:"HT5", category:"Diamond SMP"}
+    ]
+  }
 ];
 
-// === RENDER ===
-const playersContainer = document.getElementById("playersContainer");
-
-playersData.forEach(player => {
-  const card = document.createElement("div");
-  card.className = "player-card";
-
-  let modes = "";
-  player.gamemodes.forEach(mode => {
-    modes += `<div>${mode.tier} — ${mode.category}</div>`;
-  });
-
-  card.innerHTML = `
-    <div class="player-name">${player.name}</div>
-    <div class="player-gamemodes">${modes}</div>
-  `;
-
-  playersContainer.appendChild(card);
+// === CALCULATE SCORE ===
+players.forEach(p => {
+  p.score = p.gamemodes.reduce(
+    (sum, g) => sum + (tierPoints[g.tier] || 0),
+    0
+  );
 });
 
-// === SEARCH ===
-const searchButton = document.getElementById("searchButton");
-const searchInput = document.getElementById("searchInput");
-const result = document.getElementById("result");
+// === SORT BY SCORE ===
+players.sort((a,b) => b.score - a.score);
 
-function searchPlayer() {
-  const query = searchInput.value.trim().toLowerCase();
-  if (!query) {
-    result.textContent = "Please enter a player name.";
-    return;
-  }
+// === RENDER ===
+const container = document.getElementById("playersContainer");
 
-  const player = playersData.find(p => p.name.toLowerCase() === query);
+function render(list) {
+  container.innerHTML = "";
+  list.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "player-card";
 
-  if (!player) {
-    result.textContent = "Player not ranked.";
-    return;
-  }
+    card.innerHTML = `
+      <div class="player-header">
+        <div class="player-name">${p.name}</div>
+        <div class="player-score">${p.score} pts</div>
+      </div>
+      <div class="modes">
+        ${p.gamemodes.map(g => `
+          <div class="mode">
+            <span class="tier-${g.tier}">${g.tier}</span>
+            <span>${g.category}</span>
+          </div>
+        `).join("")}
+      </div>
+    `;
 
-  let html = `<b>${player.name}</b><br>`;
-  player.gamemodes.forEach(mode => {
-    html += `${mode.tier} — ${mode.category}<br>`;
+    container.appendChild(card);
   });
-
-  result.innerHTML = html;
 }
 
-searchButton.onclick = searchPlayer;
-searchInput.addEventListener("keydown", e => {
-  if (e.key === "Enter") searchPlayer();
+render(players);
+
+// === SEARCH ===
+document.getElementById("searchInput").addEventListener("input", e => {
+  const q = e.target.value.toLowerCase();
+  const filtered = players.filter(p =>
+    p.name.toLowerCase().includes(q)
+  );
+  render(filtered);
 });
 </script>
 
