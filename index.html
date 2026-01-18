@@ -79,7 +79,7 @@ h1{
 
 <script>
 // Tier scoring
-const tierPoints={HT1:100,HT2:90,HT3:80,HT4:70,HT5:60,LT1:50,LT2:40,LT3:30,LT4:20,LT5:10};
+const tierPoints={HT1:30,HT2:29,HT3:21,HT4:19,HT5:12,LT1:23,LT2:21,LT3:17,LT4:13,LT5:1};
 function normalizeTier(t){ return String(t).toUpperCase().replace(/→/g,'-').replace(/HIGH TIER/g,'HT').replace(/WEAK\s*/g,'').trim(); }
 function pointsFor(t){ const tt=normalizeTier(t); if(!tt.includes('-')) return tierPoints[tt]||0; const [a,b]=tt.split('-').map(s=>s.trim()); return Math.round(((tierPoints[a]||0)+(tierPoints[b]||0))/2); }
 
