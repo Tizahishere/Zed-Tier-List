@@ -116,7 +116,7 @@ p {
 <body>
 
 <h1>ZED TIER LIST</h1>
-<p>Clean competitive rankings • inspired by mctiers</p>
+<p>A Tierlist made with heart and made for fun lolz</p>
 
 <div id="search">
   <input id="searchInput" placeholder="Search player...">
@@ -125,126 +125,148 @@ p {
 <div id="players"></div>
 
 <script>
+/* Tier points */
 const tierPoints = {
   HT1:100, HT2:90, HT3:80, HT4:70, HT5:60,
-  LT1:50, LT2:40, LT3:30, LT4:20, LT5:10
+  LT1:50,  LT2:40, LT3:30, LT4:20, LT5:10
 };
 
-function scoreTier(t) {
-  t = t.replace("→","-").replace("HIGH TIER","HT").replace("WEAK ","");
+/* Normalize tier string */
+function normalizeTier(t) {
+  return t
+    .toUpperCase()
+    .replace("→","-")
+    .replace("HIGH TIER","HT")
+    .replace("WEAK ","")
+    .trim();
+}
+
+
+function scoreTier(tier) {
+  const t = normalizeTier(tier);
   if (!t.includes("-")) return tierPoints[t] || 0;
   const [a,b] = t.split("-");
   return Math.round((tierPoints[a] + tierPoints[b]) / 2);
 }
 
-/* === CLEAN DATA ONLY === */
+/* === bro lukas make ts better vro === */
 const players = [
 {
   name:"SolarFX",
-  tests:[{tier:"HT1", mode:"Redstone", date:"Jan 17 2026"}]
+  tests:[{tier:"HT1", mode:"Redstone"}]
 },
 {
   name:"Lemon1233210",
   tests:[
-    {tier:"HT4 → LT3", mode:"Mace", date:"Jan 17 2026"},
-    {tier:"HT5", mode:"Crystal Combat", date:"Jan 18 2026"}
+    {tier:"HT4-LT3", mode:"Mace"},
+    {tier:"HT5", mode:"Crystal Combat"}
   ]
 },
 {
   name:"prystrict",
-  tests:[{tier:"HT3", mode:"Mace", date:"Jan 17 2026"}]
+  tests:[{tier:"HT3", mode:"Mace"}]
 },
 {
   name:"Carti_v2",
   tests:[
-    {tier:"HT5", mode:"Diamond SMP", date:"Jan 17 2026"},
-    {tier:"HT5", mode:"Sword", date:"Jan 17 2026"}
+    {tier:"HT5", mode:"Diamond SMP"},
+    {tier:"HT5", mode:"Sword"}
   ]
 },
 {
   name:"Ikaris_",
-  tests:[{tier:"HT4 → LT3", mode:"Mace", date:"Jan 17 2026"}]
+  tests:[{tier:"HT4-LT3", mode:"Mace"}]
 },
 {
   name:"EnderBeacon",
-  tests:[{tier:"HT5 → LT4", mode:"Diamond SMP", date:"Jan 17 2026"}]
+  tests:[
+    {tier:"HT5-LT4", mode:"Diamond SMP"},
+    {tier:"HT5", mode:"Mace"}   // idk
+  ]
 },
 {
   name:"CatBoyNoou3h",
   tests:[
-    {tier:"LT2", mode:"Sword", date:"Jan 17 2026"},
-    {tier:"LT2", mode:"Diamond SMP", date:"Jan 17 2026"}
+    {tier:"LT2", mode:"Sword"},
+    {tier:"LT2", mode:"Diamond SMP"}
   ]
 },
 {
   name:"N0TR1XX",
-  tests:[{tier:"HT2", mode:"Mace", date:"Jan 17 2026"}]
+  tests:[{tier:"HT2", mode:"Mace"}]
 },
 {
   name:"otonashizero17",
   tests:[
-    {tier:"HT4", mode:"Mace", date:"Jan 17 2026"},
-    {tier:"HT5 → LT4", mode:"Diamond SMP", date:"Jan 18 2026"}
+    {tier:"HT4", mode:"Mace"},
+    {tier:"HT5-LT4", mode:"Diamond SMP"}
   ]
 },
 {
   name:"Rosx342",
   tests:[
-    {tier:"HT5", mode:"Mace", date:"Jan 17 2026"},
-    {tier:"HT3", mode:"Building", date:"Jan 18 2026"}
+    {tier:"HT5", mode:"Mace"},
+    {tier:"HT3", mode:"Building"}
   ]
 },
 {
   name:"SilencedMC_",
-  tests:[{tier:"HT3", mode:"Mace", date:"Jan 17 2026"}]
+  tests:[{tier:"HT3", mode:"Mace"}]
 },
 {
   name:"NiklasSpvp",
   tests:[
-    {tier:"LT4", mode:"Mace", date:"Jan 17 2026"},
-    {tier:"HT3", mode:"Crystal Combat", date:"Jan 17 2026"}
+    {tier:"LT4", mode:"Mace"},
+    {tier:"HT3", mode:"Crystal Combat"}
   ]
 },
 {
   name:"ItsDawaldo",
-  tests:[{tier:"HT2", mode:"Crystal Combat", date:"Jan 17 2026"}]
+  tests:[{tier:"HT2", mode:"Crystal Combat"}]
 }
 ];
 
-/* score + sort */
+/* Calculate scores */
 players.forEach(p=>{
-  p.score = p.tests.reduce((s,t)=>s+scoreTier(t.tier),0);
+  p.score = p.tests.reduce((sum,t)=>sum+scoreTier(t.tier),0);
 });
 players.sort((a,b)=>b.score-a.score);
 
-/* render */
-const container=document.getElementById("players");
-function render(list){
+/* Render */
+const container = document.getElementById("players");
+
+function render(list) {
   container.innerHTML="";
   list.forEach(p=>{
-    const c=document.createElement("div");
-    c.className="card";
-    c.innerHTML=`
+    const card=document.createElement("div");
+    card.className="card";
+
+    card.innerHTML=`
       <div class="header">
         <div class="name">${p.name}</div>
         <div class="score">${p.score} pts</div>
       </div>
-      ${p.tests.map(t=>`
-        <div class="test">
-          <div class="line">
-            <span class="${t.tier.replace(/[^A-Z0-9]/g,'')}">${t.tier}</span>
-            <span>${t.mode}</span>
+      ${p.tests.map(t=>{
+        const pts = scoreTier(t.tier);
+        const mainTier = normalizeTier(t.tier).split("-")[0];
+        return `
+          <div class="test">
+            <div class="line">
+              <span class="${mainTier}">${normalizeTier(t.tier)}</span>
+              <span>${t.mode}</span>
+            </div>
+            <div class="meta">${pts} pts</div>
           </div>
-          <div class="meta">${t.date}</div>
-        </div>
-      `).join("")}
+        `;
+      }).join("")}
     `;
-    container.appendChild(c);
+    container.appendChild(card);
   });
 }
+
 render(players);
 
-/* search */
+/* Search */
 document.getElementById("searchInput").addEventListener("input",e=>{
   const q=e.target.value.toLowerCase();
   render(players.filter(p=>p.name.toLowerCase().includes(q)));
