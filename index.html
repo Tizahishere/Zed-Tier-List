@@ -3,131 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZED Tier List — Futuristic</title>
+<title>ZED Tier List</title>
 <style>
 :root {
-  --bg: #0b0d12;
-  --card: #1b1f2a;
-  --row: #22263a;
-  --text: #eef0ff;
-  --muted: #7b7f9a;
-  --accent: #7c8cff;
-  --glow: #7c8cff33;
+  --bg:#0b0d12;
+  --card:#1b1f2a;
+  --row:#22263a;
+  --text:#eef0ff;
+  --muted:#7b7f9a;
+  --accent:#7c8cff;
+  --glow:#7c8cff33;
 }
-
-/* Global Reset */
-* { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
-body { background: var(--bg); color: var(--text); padding: 40px 20px; }
+body {
+  margin:0;
+  padding:36px;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Segoe UI',Roboto,sans-serif;
+}
 
 /* Headings */
-h1 {
-  text-align: center;
-  font-size: 2.5em;
-  letter-spacing: 2px;
-  color: var(--accent);
-  margin-bottom: 8px;
-  text-shadow: 0 0 8px var(--accent);
-}
-.lead {
-  text-align: center;
-  color: var(--muted);
-  margin-bottom: 35px;
-}
+h1{text-align:center;font-size:2.5em;letter-spacing:2px;color:var(--accent);margin-bottom:8px;text-shadow:0 0 8px var(--accent);}
+.lead{text-align:center;color:var(--muted);margin-bottom:35px;font-size:1rem;}
 
 /* Search */
-#search { display:flex; justify-content:center; margin-bottom:40px; }
-#search input {
-  width:320px; padding:12px 16px; border-radius:12px;
-  border:none; font-size:16px; outline:none;
-  background: #15182c; color: var(--text);
-  box-shadow: inset 0 0 10px #000;
-  transition: 0.3s all;
-}
-#search input:focus { box-shadow: inset 0 0 18px var(--accent); }
+#search{display:flex;justify-content:center;margin-bottom:40px;}
+#search input{width:320px;padding:12px 16px;border-radius:12px;border:none;font-size:16px;outline:none;background:#15182c;color:var(--text);box-shadow: inset 0 0 10px #000;transition:0.3s all;}
+#search input:focus{box-shadow: inset 0 0 18px var(--accent);}
 
 /* Grid */
-#players { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:24px; max-width:1200px; margin:auto; }
+#players{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;max-width:1200px;margin:auto;}
 
 /* Card */
-.card {
-  background: var(--card);
-  border-radius:18px;
-  padding:18px;
-  box-shadow: 0 0 12px #000 inset, 0 8px 24px rgba(0,0,0,0.7);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  overflow: hidden;
-}
-.card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 0 20px var(--accent), 0 12px 28px rgba(0,0,0,0.9);
-}
+.card{background:var(--card);border-radius:18px;padding:18px;box-shadow:0 0 12px #000 inset,0 8px 24px rgba(0,0,0,0.7);transition:transform 0.3s ease,box-shadow 0.3s ease;cursor:pointer;overflow:hidden;}
+.card:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 0 20px var(--accent),0 12px 28px rgba(0,0,0,0.9);}
 
-/* Card Header */
-.header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-.name { font-weight:800; font-size:18px; color: var(--accent); letter-spacing:1px; }
-.score { font-weight:700; font-size:16px; color: var(--accent); }
+/* Header */
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.name{font-weight:800;font-size:18px;color:var(--accent);letter-spacing:1px;text-shadow:0 0 6px var(--accent);}
+.score{font-weight:700;font-size:16px;color:var(--accent);}
 
-/* Tests */
-.test { background: var(--row); border-radius:12px; padding:12px; margin-bottom:10px; position: relative; overflow: hidden; }
-.test::before {
-  content: "";
-  position:absolute; top:0; left:-100%; width:100%; height:100%;
-  background: linear-gradient(120deg, #7c8cff55, #7c8cff11, #7c8cff55);
-  transform: skewX(-20deg);
-  transition: all 0.6s;
-}
-.test:hover::before { left:100%; }
-
-/* Line */
-.line { display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:600; }
-.tier { font-weight:700; font-size:14px; }
-
-/* Meta info */
-.meta { font-size:12px; color: var(--muted); margin-top:4px; }
+/* Test info */
+.test{background:var(--row);border-radius:12px;padding:12px;margin-bottom:10px;}
+.line{display:flex;justify-content:space-between;font-size:14px;font-weight:600;}
+.tier{font-weight:700;}
+.meta{font-size:12px;color:var(--muted);margin-top:4px;}
 
 /* Tier Colors */
 .HT1{color:#00ffd5} .HT2{color:#1aff00} .HT3{color:#caff00} .HT4{color:#ffc400} .HT5{color:#ff9900}
 .LT1{color:#ff6b6b} .LT2{color:#ff4d4d} .LT3{color:#ff3333} .LT4{color:#ff1a1a} .LT5{color:#cc0000}
 
+/* Modal */
+#modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;justify-content:center;align-items:center;z-index:1000;}
+#modalContent{background:var(--card);border-radius:18px;padding:24px;width:90%;max-width:500px;position:relative;animation:fadeIn 0.3s;}
+#closeModal{position:absolute;top:12px;right:16px;font-size:20px;cursor:pointer;color:var(--accent);}
+#modal img{width:128px;height:128px;margin-bottom:16px;border-radius:12px;background:#111;display:block;margin-left:auto;margin-right:auto;}
+#modal h2{text-align:center;color:var(--accent);margin-bottom:12px;}
+#modal .gamemode{background:var(--row);padding:8px 12px;border-radius:12px;margin:6px 0;display:flex;justify-content:space-between;align-items:center;}
+
 /* Animations */
-@keyframes pulse {
-  0%,100% { text-shadow: 0 0 5px var(--accent); }
-  50% { text-shadow: 0 0 15px var(--accent); }
-}
-.name { animation: pulse 2.5s infinite; }
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
 </style>
 </head>
 <body>
 
-<h1>ZED TIER LIST</h1>
-<p class="lead"> tier list made for fun.</p>
+<h1>ZED Tier List</h1>
+<p class="lead">Made for fun, small tier list</p>
 
 <div id="search">
-  <input id="searchInput" placeholder="Search player..."/>
+  <input id="searchInput" placeholder="Search player..." />
 </div>
 
 <div id="players"></div>
 
+<!-- Modal -->
+<div id="modal">
+  <div id="modalContent">
+    <span id="closeModal">&times;</span>
+    <img id="skinImg" src="" alt="Skin">
+    <h2 id="modalName"></h2>
+    <div id="modalGamemodes"></div>
+  </div>
+</div>
+
 <script>
 // Tier scoring
-const tierPoints = {
-  HT1:100, HT2:90, HT3:80, HT4:70, HT5:60,
-  LT1:50, LT2:40, LT3:30, LT4:20, LT5:10
-};
-
-// Normalize tier string
-function normalizeTier(t) {
-  if(!t) return "";
-  return t.toUpperCase().replace(/→/g,'-').replace(/HIGH TIER/g,'HT').replace(/WEAK\s*/g,'').trim();
-}
-
-// Calculate points
-function pointsFor(tierRaw) {
-  const t = normalizeTier(tierRaw);
-  if(!t.includes('-')) return tierPoints[t]||0;
-  const [a,b] = t.split('-').map(s=>s.trim());
-  return Math.round(((tierPoints[a]||0) + (tierPoints[b]||0)) /2);
-}
+const tierPoints = { HT1:100, HT2:90, HT3:80, HT4:70, HT5:60, LT1:50, LT2:40, LT3:30, LT4:20, LT5:10 };
+function normalizeTier(t){ if(!t) return ""; return String(t).toUpperCase().replace(/→/g,'-').replace(/HIGH TIER/g,'HT').replace(/WEAK\s*/g,'').trim(); }
+function pointsFor(tierRaw){ const t = normalizeTier(tierRaw); if(!t.includes('-')) return tierPoints[t]||0; const [a,b] = t.split('-').map(s=>s.trim()); return Math.round(((tierPoints[a]||0)+(tierPoints[b]||0))/2); }
 
 // Player Data
 const players = [
@@ -149,39 +112,52 @@ const players = [
 ];
 
 // Compute scores
-players.forEach(p=>p.score = p.tests.reduce((s,t)=>s+pointsFor(t.tier),0));
+players.forEach(p=>p.score=p.tests.reduce((s,t)=>s+pointsFor(t.tier),0));
 players.sort((a,b)=>b.score-a.score);
 
-// Render
+// Render grid
 const container = document.getElementById('players');
 function render(list){
   container.innerHTML="";
   list.forEach(p=>{
     const card=document.createElement('div'); card.className='card';
-    const testsHTML = p.tests.map(t=>{
-      const pts = pointsFor(t.tier);
-      const mainTier = normalizeTier(t.tier).split('-')[0]||'';
-      return `<div class="test">
-        <div class="line">
-          <div class="left">
-            <div class="tier ${mainTier}">${normalizeTier(t.tier)}</div>
-            <div class="meta">${t.mode} • ${pts} pts</div>
-          </div>
-          <div class="score">${pts} pts</div>
-        </div>
-      </div>`;
-    }).join('');
-    card.innerHTML = `<div class="header"><div class="name">${p.name}</div><div class="score">${p.score} pts</div></div>${testsHTML}`;
+    const testsHTML = p.tests.map(t=>`<div class="test"><div class="line"><div class="tier ${normalizeTier(t.tier).split('-')[0]}">${normalizeTier(t.tier)} - ${t.mode}</div></div></div>`).join('');
+    card.innerHTML=`<div class="header"><div class="name">${p.name}</div><div class="score">${p.score} pts</div></div>${testsHTML}`;
+    card.onclick=()=>openModal(p);
     container.appendChild(card);
   });
 }
 render(players);
 
+// Modal logic
+const modal=document.getElementById('modal');
+const closeModal=document.getElementById('closeModal');
+const skinImg=document.getElementById('skinImg');
+const modalName=document.getElementById('modalName');
+const modalGamemodes=document.getElementById('modalGamemodes');
+
+function openModal(player){
+  modal.style.display="flex";
+  modalName.textContent=player.name;
+  modalGamemodes.innerHTML="";
+  player.tests.forEach(t=>{
+    const div=document.createElement('div'); div.className='gamemode';
+    div.innerHTML=`<span class="${normalizeTier(t.tier).split('-')[0]}">${normalizeTier(t.tier)}</span> <span>${t.mode} • ${pointsFor(t.tier)} pts</span>`;
+    modalGamemodes.appendChild(div);
+  });
+  // Load skin from Crafatar
+  const skinUrl=`https://crafatar.com/skins/${player.name}?size=128`;
+  skinImg.src=skinUrl;
+  skinImg.onerror=()=>{skinImg.src=''; skinImg.alt='User is cracked'; skinImg.style.color='var(--accent)'; skinImg.style.textAlign='center'; skinImg.style.fontSize='14px'; skinImg.style.display='block'; skinImg.innerHTML='User is cracked';}
+}
+
+closeModal.onclick=()=>{modal.style.display='none';}
+window.onclick=e=>{if(e.target===modal) modal.style.display='none';}
+
 // Search
 document.getElementById('searchInput').addEventListener('input', e=>{
-  const q = e.target.value.toLowerCase();
-  if(!q) render(players);
-  else render(players.filter(p=>p.name.toLowerCase().includes(q)));
+  const q=e.target.value.toLowerCase();
+  if(!q) render(players); else render(players.filter(p=>p.name.toLowerCase().includes(q)));
 });
 </script>
 
