@@ -58,12 +58,45 @@ h1{
 
 @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
 @keyframes scaleIn{0%{transform:scale(0.9)}100%{transform:scale(1)}}
+
+  .discord-btn {
+  display: inline-block;
+  margin: 30px auto;
+  padding: 14px 28px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #eef0ff;
+  text-decoration: none;
+  background: linear-gradient(135deg, #5865F2, #7c8cff);
+  box-shadow:
+    0 0 12px rgba(124,140,255,0.6),
+    0 8px 24px rgba(0,0,0,0.7);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.discord-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow:
+    0 0 22px rgba(124,140,255,0.9),
+    0 12px 32px rgba(0,0,0,0.9);
+  filter: brightness(1.15);
+}
+
+.discord-btn:active {
+  transform: scale(0.98);
+}
+
 </style>
 </head>
 <body>
 <h1>ZED Tier List</h1>
 <p class="lead">Made for fun, small tier list</p>
-  <a href="https://discord.gg/MXjkjzWRvd">Join Our Discord?</a>
+ <a href="https://discord.gg/MXjkjzWRvd" target="_blank" class="discord-btn">
+  Join the ZED Discord
+</a>
+
 <div id="search">
   <input id="searchInput" placeholder="Search player..." />
 </div>
