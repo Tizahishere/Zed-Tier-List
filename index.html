@@ -12,7 +12,7 @@
   --text:#eef0ff;
   --muted:#7b7f9a;
   --accent:#7c8cff;
-  --glow:#7c8cff33;
+  --glow:#7c8cff44;
 }
 body {
   margin:0;
@@ -56,10 +56,11 @@ h1{text-align:center;font-size:2.5em;letter-spacing:2px;color:var(--accent);marg
 /* Modal */
 #modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);display:none;justify-content:center;align-items:center;z-index:1000;}
 #modalContent{background:var(--card);border-radius:18px;padding:24px;width:90%;max-width:500px;position:relative;animation:fadeIn 0.3s;}
-#closeModal{position:absolute;top:12px;right:16px;font-size:20px;cursor:pointer;color:var(--accent);}
+#closeModal{position:absolute;top:12px;right:16px;font-size:24px;cursor:pointer;color:var(--accent);}
 #modal img{width:128px;height:128px;margin-bottom:16px;border-radius:12px;background:#111;display:block;margin-left:auto;margin-right:auto;}
 #modal h2{text-align:center;color:var(--accent);margin-bottom:12px;}
-#modal .gamemode{background:var(--row);padding:8px 12px;border-radius:12px;margin:6px 0;display:flex;justify-content:space-between;align-items:center;}
+#modal .gamemode{background:var(--row);padding:8px 12px;border-radius:12px;margin:6px 0;display:flex;justify-content:space-between;align-items:center;transition:0.3s;background:linear-gradient(90deg,#1b1f2a,#22263a);}
+#modal .gamemode:hover{background:linear-gradient(90deg,#7c8cff33,#1b1f2a);}
 
 /* Animations */
 @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
@@ -129,7 +130,7 @@ function render(list){
 }
 render(players);
 
-// Modal logic
+// Modal logic with Mojang UUID skin fetch
 const modal=document.getElementById('modal');
 const closeModal=document.getElementById('closeModal');
 const skinImg=document.getElementById('skinImg');
@@ -140,21 +141,33 @@ function openModal(player){
   modal.style.display="flex";
   modalName.textContent=player.name;
   modalGamemodes.innerHTML="";
+
   player.tests.forEach(t=>{
     const div=document.createElement('div'); div.className='gamemode';
     div.innerHTML=`<span class="${normalizeTier(t.tier).split('-')[0]}">${normalizeTier(t.tier)}</span> <span>${t.mode} • ${pointsFor(t.tier)} pts</span>`;
     modalGamemodes.appendChild(div);
   });
-  // Load skin from Crafatar
-  const skinUrl=`https://crafatar.com/skins/${player.name}?size=128`;
-  skinImg.src=skinUrl;
-  skinImg.onerror=()=>{skinImg.src=''; skinImg.alt='User is cracked'; skinImg.style.color='var(--accent)'; skinImg.style.textAlign='center'; skinImg.style.fontSize='14px'; skinImg.style.display='block'; skinImg.innerHTML='User is cracked';}
+
+  // Fetch UUID from Mojang API
+  fetch(`https://api.mojang.com/users/profiles/minecraft/${player.name}`)
+    .then(res=>res.json())
+    .then(data=>{
+      if(data && data.id){
+        skinImg.src=`https://crafatar.com/skins/${data.id}?size=128`;
+        skinImg.alt="Skin";
+      } else {
+        skinImg.src=""; skinImg.alt="User is cracked";
+      }
+    })
+    .catch(()=>{
+      skinImg.src=""; skinImg.alt="User is cracked";
+    });
 }
 
 closeModal.onclick=()=>{modal.style.display='none';}
 window.onclick=e=>{if(e.target===modal) modal.style.display='none';}
 
-// Search
+// Search filter
 document.getElementById('searchInput').addEventListener('input', e=>{
   const q=e.target.value.toLowerCase();
   if(!q) render(players); else render(players.filter(p=>p.name.toLowerCase().includes(q)));
