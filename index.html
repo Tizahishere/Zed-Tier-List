@@ -7,223 +7,247 @@
 
 <style>
 :root {
-  --bg: #0e0f14;
-  --card: #161821;
-  --text: #eaeaf0;
-  --muted: #9aa0b3;
-  --accent: #7c8cff;
+  --bg:#0b0d12;
+  --card:#141726;
+  --row:#1c2033;
+  --text:#eef0ff;
+  --muted:#9aa0b3;
+  --accent:#7c8cff;
 }
 
 body {
-  margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto;
-  background: var(--bg);
-  color: var(--text);
-  padding: 40px 20px;
+  margin:0;
+  padding:40px 20px;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto;
 }
 
 h1 {
-  text-align: center;
-  letter-spacing: 2px;
+  text-align:center;
+  letter-spacing:2px;
 }
 
-.description {
-  text-align: center;
-  color: var(--muted);
-  margin-bottom: 30px;
+p {
+  text-align:center;
+  color:var(--muted);
+  margin-bottom:30px;
 }
 
-/* Search */
-#searchContainer {
-  text-align: center;
-  margin-bottom: 40px;
+#search {
+  display:flex;
+  justify-content:center;
+  margin-bottom:35px;
 }
 
-#searchInput {
-  padding: 12px;
-  width: 260px;
-  border-radius: 10px;
-  border: none;
-  outline: none;
-  font-size: 15px;
+#search input {
+  padding:12px 16px;
+  width:300px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
+  outline:none;
 }
 
-#playersContainer {
-  max-width: 1100px;
-  margin: auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 22px;
+#players {
+  max-width:1200px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:24px;
 }
 
-/* Player Card */
-.player-card {
-  background: var(--card);
-  border-radius: 16px;
-  padding: 18px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.4);
-  transition: transform .15s;
+.card {
+  background:var(--card);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 15px 40px rgba(0,0,0,.45);
 }
 
-.player-card:hover {
-  transform: translateY(-6px);
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:12px;
 }
 
-.player-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.name {
+  font-size:18px;
+  font-weight:800;
 }
 
-.player-name {
-  font-size: 18px;
-  font-weight: 700;
+.score {
+  color:var(--accent);
+  font-weight:800;
 }
 
-.player-score {
-  color: var(--accent);
-  font-weight: 700;
+.test {
+  background:var(--row);
+  border-radius:12px;
+  padding:10px 12px;
+  margin-bottom:10px;
 }
 
-.modes {
-  margin-top: 14px;
+.line {
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
 }
 
-.mode {
-  display: flex;
-  justify-content: space-between;
-  background: #1f2230;
-  padding: 6px 10px;
-  border-radius: 8px;
-  margin-bottom: 6px;
-  font-size: 14px;
+.meta {
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px;
 }
 
-/* Tier Colors */
-.tier-HT1 { color:#00ffcc }
-.tier-HT2 { color:#1aff00 }
-.tier-HT3 { color:#cfff00 }
-.tier-HT4 { color:#ffcc00 }
-.tier-HT5 { color:#ff9900 }
-
-.tier-LT1 { color:#ff6666 }
-.tier-LT2 { color:#ff4d4d }
-.tier-LT3 { color:#ff3333 }
-.tier-LT4 { color:#ff1a1a }
-.tier-LT5 { color:#cc0000 }
-
-.hidden {
-  display: none;
-}
+/* Tier colors */
+.HT1{color:#00ffd5}
+.HT2{color:#1aff00}
+.HT3{color:#caff00}
+.HT4{color:#ffc400}
+.HT5{color:#ff9900}
+.LT1{color:#ff6b6b}
+.LT2{color:#ff4d4d}
+.LT3{color:#ff3333}
+.LT4{color:#ff1a1a}
+.LT5{color:#cc0000}
 </style>
 </head>
 <body>
 
 <h1>ZED TIER LIST</h1>
-<p class="description">Competitive tier rankings inspired by mctiers</p>
+<p>Clean competitive rankings • inspired by mctiers</p>
 
-<div id="searchContainer">
+<div id="search">
   <input id="searchInput" placeholder="Search player...">
 </div>
 
-<div id="playersContainer"></div>
+<div id="players"></div>
 
 <script>
-// === TIER POINTS ===
 const tierPoints = {
   HT1:100, HT2:90, HT3:80, HT4:70, HT5:60,
-  LT1:50,  LT2:40, LT3:30, LT4:20, LT5:10
+  LT1:50, LT2:40, LT3:30, LT4:20, LT5:10
 };
 
-// === DATA ===
-const players = [
-  {
-    name: "Rosx342",
-    gamemodes: [
-      { tier:"HT5", category:"Mace" },
-      { tier:"HT3", category:"Building" }
-    ]
-  },
-  { name:"ItsDawaldo", gamemodes:[{tier:"HT2", category:"Crystal"}] },
-  { name:"NiklasSpvp", gamemodes:[{tier:"HT3", category:"Crystal"}] },
-  { name:"SilencedMC_", gamemodes:[{tier:"HT3", category:"Mace"}] },
-  { name:"N0TR1XX", gamemodes:[{tier:"HT2", category:"Mace"}] },
-
-  {
-    name:"CatBoyNoou3h",
-    gamemodes:[
-      {tier:"LT2", category:"Sword"},
-      {tier:"LT2", category:"Diamond SMP"}
-    ]
-  },
-
-  {
-    name:"Tizahisnothere",
-    gamemodes:[
-      {tier:"HT5", category:"Crystal"},
-      {tier:"LT5", category:"Mace"},
-      {tier:"LT5", category:"Sword"},
-      {tier:"HT5", category:"SMP"}
-    ]
-  },
-
-  {
-    name:"otonashizero17",
-    gamemodes:[
-      {tier:"HT4", category:"Mace"},
-      {tier:"HT5", category:"Diamond SMP"}
-    ]
-  }
-];
-
-// === CALCULATE SCORE ===
-players.forEach(p => {
-  p.score = p.gamemodes.reduce(
-    (sum, g) => sum + (tierPoints[g.tier] || 0),
-    0
-  );
-});
-
-// === SORT BY SCORE ===
-players.sort((a,b) => b.score - a.score);
-
-// === RENDER ===
-const container = document.getElementById("playersContainer");
-
-function render(list) {
-  container.innerHTML = "";
-  list.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "player-card";
-
-    card.innerHTML = `
-      <div class="player-header">
-        <div class="player-name">${p.name}</div>
-        <div class="player-score">${p.score} pts</div>
-      </div>
-      <div class="modes">
-        ${p.gamemodes.map(g => `
-          <div class="mode">
-            <span class="tier-${g.tier}">${g.tier}</span>
-            <span>${g.category}</span>
-          </div>
-        `).join("")}
-      </div>
-    `;
-
-    container.appendChild(card);
-  });
+function scoreTier(t) {
+  t = t.replace("→","-").replace("HIGH TIER","HT").replace("WEAK ","");
+  if (!t.includes("-")) return tierPoints[t] || 0;
+  const [a,b] = t.split("-");
+  return Math.round((tierPoints[a] + tierPoints[b]) / 2);
 }
 
+/* === CLEAN DATA ONLY === */
+const players = [
+{
+  name:"SolarFX",
+  tests:[{tier:"HT1", mode:"Redstone", date:"Jan 17 2026"}]
+},
+{
+  name:"Lemon1233210",
+  tests:[
+    {tier:"HT4 → LT3", mode:"Mace", date:"Jan 17 2026"},
+    {tier:"HT5", mode:"Crystal Combat", date:"Jan 18 2026"}
+  ]
+},
+{
+  name:"prystrict",
+  tests:[{tier:"HT3", mode:"Mace", date:"Jan 17 2026"}]
+},
+{
+  name:"Carti_v2",
+  tests:[
+    {tier:"HT5", mode:"Diamond SMP", date:"Jan 17 2026"},
+    {tier:"HT5", mode:"Sword", date:"Jan 17 2026"}
+  ]
+},
+{
+  name:"Ikaris_",
+  tests:[{tier:"HT4 → LT3", mode:"Mace", date:"Jan 17 2026"}]
+},
+{
+  name:"EnderBeacon",
+  tests:[{tier:"HT5 → LT4", mode:"Diamond SMP", date:"Jan 17 2026"}]
+},
+{
+  name:"CatBoyNoou3h",
+  tests:[
+    {tier:"LT2", mode:"Sword", date:"Jan 17 2026"},
+    {tier:"LT2", mode:"Diamond SMP", date:"Jan 17 2026"}
+  ]
+},
+{
+  name:"N0TR1XX",
+  tests:[{tier:"HT2", mode:"Mace", date:"Jan 17 2026"}]
+},
+{
+  name:"otonashizero17",
+  tests:[
+    {tier:"HT4", mode:"Mace", date:"Jan 17 2026"},
+    {tier:"HT5 → LT4", mode:"Diamond SMP", date:"Jan 18 2026"}
+  ]
+},
+{
+  name:"Rosx342",
+  tests:[
+    {tier:"HT5", mode:"Mace", date:"Jan 17 2026"},
+    {tier:"HT3", mode:"Building", date:"Jan 18 2026"}
+  ]
+},
+{
+  name:"SilencedMC_",
+  tests:[{tier:"HT3", mode:"Mace", date:"Jan 17 2026"}]
+},
+{
+  name:"NiklasSpvp",
+  tests:[
+    {tier:"LT4", mode:"Mace", date:"Jan 17 2026"},
+    {tier:"HT3", mode:"Crystal Combat", date:"Jan 17 2026"}
+  ]
+},
+{
+  name:"ItsDawaldo",
+  tests:[{tier:"HT2", mode:"Crystal Combat", date:"Jan 17 2026"}]
+}
+];
+
+/* score + sort */
+players.forEach(p=>{
+  p.score = p.tests.reduce((s,t)=>s+scoreTier(t.tier),0);
+});
+players.sort((a,b)=>b.score-a.score);
+
+/* render */
+const container=document.getElementById("players");
+function render(list){
+  container.innerHTML="";
+  list.forEach(p=>{
+    const c=document.createElement("div");
+    c.className="card";
+    c.innerHTML=`
+      <div class="header">
+        <div class="name">${p.name}</div>
+        <div class="score">${p.score} pts</div>
+      </div>
+      ${p.tests.map(t=>`
+        <div class="test">
+          <div class="line">
+            <span class="${t.tier.replace(/[^A-Z0-9]/g,'')}">${t.tier}</span>
+            <span>${t.mode}</span>
+          </div>
+          <div class="meta">${t.date}</div>
+        </div>
+      `).join("")}
+    `;
+    container.appendChild(c);
+  });
+}
 render(players);
 
-// === SEARCH ===
-document.getElementById("searchInput").addEventListener("input", e => {
-  const q = e.target.value.toLowerCase();
-  const filtered = players.filter(p =>
-    p.name.toLowerCase().includes(q)
-  );
-  render(filtered);
+/* search */
+document.getElementById("searchInput").addEventListener("input",e=>{
+  const q=e.target.value.toLowerCase();
+  render(players.filter(p=>p.name.toLowerCase().includes(q)));
 });
 </script>
 
