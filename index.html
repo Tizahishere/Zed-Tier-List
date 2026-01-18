@@ -2,302 +2,186 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>ZED Tier List</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<title>ZED Tier List — Futuristic</title>
 <style>
 :root {
-  --bg:#0b0d12;
-  --card:#141726;
-  --row:#1c2033;
-  --text:#eef0ff;
-  --muted:#9aa0b3;
-  --accent:#7c8cff;
+  --bg: #0b0d12;
+  --card: #1b1f2a;
+  --row: #22263a;
+  --text: #eef0ff;
+  --muted: #7b7f9a;
+  --accent: #7c8cff;
+  --glow: #7c8cff33;
 }
 
-body {
-  margin:0;
-  padding:40px 20px;
-  background:var(--bg);
-  color:var(--text);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto;
-}
+/* Global Reset */
+* { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+body { background: var(--bg); color: var(--text); padding: 40px 20px; }
 
+/* Headings */
 h1 {
-  text-align:center;
-  letter-spacing:2px;
+  text-align: center;
+  font-size: 2.5em;
+  letter-spacing: 2px;
+  color: var(--accent);
+  margin-bottom: 8px;
+  text-shadow: 0 0 8px var(--accent);
+}
+.lead {
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 35px;
 }
 
-p {
-  text-align:center;
-  color:var(--muted);
-  margin-bottom:30px;
-}
-
-#search {
-  display:flex;
-  justify-content:center;
-  margin-bottom:35px;
-}
-
+/* Search */
+#search { display:flex; justify-content:center; margin-bottom:40px; }
 #search input {
-  padding:12px 16px;
-  width:300px;
-  border-radius:12px;
-  border:none;
-  font-size:15px;
-  outline:none;
+  width:320px; padding:12px 16px; border-radius:12px;
+  border:none; font-size:16px; outline:none;
+  background: #15182c; color: var(--text);
+  box-shadow: inset 0 0 10px #000;
+  transition: 0.3s all;
 }
+#search input:focus { box-shadow: inset 0 0 18px var(--accent); }
 
-#players {
-  max-width:1200px;
-  margin:auto;
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-  gap:24px;
-}
+/* Grid */
+#players { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:24px; max-width:1200px; margin:auto; }
 
+/* Card */
 .card {
-  background:var(--card);
+  background: var(--card);
   border-radius:18px;
   padding:18px;
-  box-shadow:0 15px 40px rgba(0,0,0,.45);
+  box-shadow: 0 0 12px #000 inset, 0 8px 24px rgba(0,0,0,0.7);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+.card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 0 20px var(--accent), 0 12px 28px rgba(0,0,0,0.9);
 }
 
-.header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:12px;
-}
+/* Card Header */
+.header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.name { font-weight:800; font-size:18px; color: var(--accent); letter-spacing:1px; }
+.score { font-weight:700; font-size:16px; color: var(--accent); }
 
-.name {
-  font-size:18px;
-  font-weight:800;
+/* Tests */
+.test { background: var(--row); border-radius:12px; padding:12px; margin-bottom:10px; position: relative; overflow: hidden; }
+.test::before {
+  content: "";
+  position:absolute; top:0; left:-100%; width:100%; height:100%;
+  background: linear-gradient(120deg, #7c8cff55, #7c8cff11, #7c8cff55);
+  transform: skewX(-20deg);
+  transition: all 0.6s;
 }
+.test:hover::before { left:100%; }
 
-.score {
-  color:var(--accent);
-  font-weight:800;
+/* Line */
+.line { display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:600; }
+.tier { font-weight:700; font-size:14px; }
+
+/* Meta info */
+.meta { font-size:12px; color: var(--muted); margin-top:4px; }
+
+/* Tier Colors */
+.HT1{color:#00ffd5} .HT2{color:#1aff00} .HT3{color:#caff00} .HT4{color:#ffc400} .HT5{color:#ff9900}
+.LT1{color:#ff6b6b} .LT2{color:#ff4d4d} .LT3{color:#ff3333} .LT4{color:#ff1a1a} .LT5{color:#cc0000}
+
+/* Animations */
+@keyframes pulse {
+  0%,100% { text-shadow: 0 0 5px var(--accent); }
+  50% { text-shadow: 0 0 15px var(--accent); }
 }
-
-.test {
-  background:var(--row);
-  border-radius:12px;
-  padding:10px 12px;
-  margin-bottom:10px;
-}
-
-.line {
-  display:flex;
-  justify-content:space-between;
-  font-size:14px;
-}
-
-.meta {
-  font-size:12px;
-  color:var(--muted);
-  margin-top:4px;
-}
-
-/* Tier colors */
-.HT1{color:#00ffd5}
-.HT2{color:#1aff00}
-.HT3{color:#caff00}
-.HT4{color:#ffc400}
-.HT5{color:#ff9900}
-.LT1{color:#ff6b6b}
-.LT2{color:#ff4d4d}
-.LT3{color:#ff3333}
-.LT4{color:#ff1a1a}
-.LT5{color:#cc0000}
+.name { animation: pulse 2.5s infinite; }
 </style>
 </head>
 <body>
 
 <h1>ZED TIER LIST</h1>
-<p>A Tierlist made with heart and made for fun lolz</p>
+<p class="lead"> tier list made for fun.</p>
 
 <div id="search">
-  <input id="searchInput" placeholder="Search player...">
+  <input id="searchInput" placeholder="Search player..."/>
 </div>
 
 <div id="players"></div>
 
 <script>
-/* yayy points */
+// Tier scoring
 const tierPoints = {
-  HT1:60, HT2:43, HT3:35, HT4:30, HT5:29,
-  LT1:52,  LT2:40, LT3:30, LT4:20, LT5:10
+  HT1:100, HT2:90, HT3:80, HT4:70, HT5:60,
+  LT1:50, LT2:40, LT3:30, LT4:20, LT5:10
 };
 
-/* Normalize tier string */
+// Normalize tier string
 function normalizeTier(t) {
-  return t
-    .toUpperCase()
-    .replace("→","-")
-    .replace("HIGH TIER","HT")
-    .replace("WEAK ","")
-    .trim();
+  if(!t) return "";
+  return t.toUpperCase().replace(/→/g,'-').replace(/HIGH TIER/g,'HT').replace(/WEAK\s*/g,'').trim();
 }
 
-
-function scoreTier(tier) {
-  const t = normalizeTier(tier);
-  if (!t.includes("-")) return tierPoints[t] || 0;
-  const [a,b] = t.split("-");
-  return Math.round((tierPoints[a] + tierPoints[b]) / 2);
+// Calculate points
+function pointsFor(tierRaw) {
+  const t = normalizeTier(tierRaw);
+  if(!t.includes('-')) return tierPoints[t]||0;
+  const [a,b] = t.split('-').map(s=>s.trim());
+  return Math.round(((tierPoints[a]||0) + (tierPoints[b]||0)) /2);
 }
 
-/* === bro lukas make ts better vro === */
+// Player Data
 const players = [
-   {
-       name:"432Q",
-  tests:[{tier:"LT2", mode:"Crystal Combat"}]
-},
-  
-  name:"sadbeacon1110",
-  tests:[
-    {tier:"LT1", mode:"Mace"},
-    {tier:"LT2", mode:"Diamond SMP"},
-    {tier:"HT3", mode:"Sword"},
-    {tier:"HT3", mode:"Crystal"}
-  ]
-},
-  
-  {
-  name:"Tizahisnothere",
-  tests:[
-    {tier:"HT5-LT4", mode:"Crystal Combat"},
-    {tier:"HT5", mode:"Mace"}
-  ]
-},
-  
-{
-  name:"SolarFX",
-  tests:[{tier:"HT1", mode:"Redstone"}]
-},
-
-{
-  name:"Lemon1233210",
-  tests:[
-    {tier:"HT4-LT3", mode:"Mace"},
-    {tier:"HT5", mode:"Crystal Combat"},
-    {tier:"HT5", mode:"Building"}
-  ]
-},
-{
-  name:"prystrict",
-  tests:[{tier:"HT3", mode:"Mace"}]
-},
-{
-  name:"Carti_v2",
-  tests:[
-    {tier:"HT5", mode:"Diamond SMP"},
-    {tier:"HT5", mode:"Sword"}
-  ]
-},
-{
-  name:"Ikaris_",
-  tests:[{tier:"HT4-LT3", mode:"Mace"}]
-},
-{
-  name:"EnderBeacon",
-  tests:[
-    {tier:"HT5-LT4", mode:"Diamond SMP"},
-    {tier:"LT1", mode:"Mace"}   // idk
-  ]
-},
-{
-  name:"CatBoyNoou3h",
-  tests:[
-    {tier:"LT2", mode:"Sword"},
-    {tier:"LT2", mode:"Diamond SMP"}
-  ]
-},
-{
-  name:"N0TR1XX",
-  tests:[{tier:"HT2", mode:"Mace"}]
-},
-{
-  name:"otonashizero17",
-  tests:[
-    {tier:"HT4", mode:"Mace"},
-    {tier:"HT5-LT4", mode:"Diamond SMP"}
-  ]
-},
-{
-  name:"Rosx342",
-  tests:[
-    {tier:"HT5", mode:"Mace"},
-    {tier:"HT3", mode:"Building"}
-  ]
-},
-{
-  name:"SilencedMC_",
-  tests:[{tier:"HT3", mode:"Mace"}]
-},
-{
-  name:"NiklasSpvp",
-  tests:[
-    {tier:"LT4", mode:"Mace"},
-    {tier:"HT3", mode:"Crystal Combat"}
-  ]
-},
-{
-  name:"ItsDawaldo",
-  tests:[
-    {tier:"HT2", mode:"Crystal Combat"},
-    {tier:"HT3", mode:"Sword"},
-        {tier:"HT4", mode:"SMP"}
-        ]
-}
+  { name:"Tizahisnothere", tests:[{tier:"HT5-LT4", mode:"Crystal Combat"},{tier:"HT5", mode:"Mace"}] },
+  { name:"Rosx342", tests:[{tier:"HT5", mode:"Mace"},{tier:"HT3", mode:"Building"}] },
+  { name:"Lemon1233210", tests:[{tier:"HT4-LT3", mode:"Mace"},{tier:"HT5", mode:"Crystal Combat"},{tier:"HT5", mode:"Building"}] },
+  { name:"prystrict", tests:[{tier:"HT3", mode:"Mace"}] },
+  { name:"Carti_v2", tests:[{tier:"HT5", mode:"Diamond SMP"},{tier:"HT5", mode:"Sword"}] },
+  { name:"EnderBeacon", tests:[{tier:"HT5-LT4", mode:"Diamond SMP"},{tier:"LT1", mode:"Mace"}] },
+  { name:"ItsDawaldo", tests:[{tier:"HT2", mode:"Crystal Combat"},{tier:"HT3", mode:"Sword"},{tier:"HT4", mode:"SMP"}] },
+  { name:"NiklasSpvp", tests:[{tier:"LT4", mode:"Mace"},{tier:"HT3", mode:"Crystal Combat"}] },
+  { name:"N0TR1XX", tests:[{tier:"HT2", mode:"Mace"}] },
+  { name:"Ikaris_", tests:[{tier:"HT4-LT3", mode:"Mace"}] },
+  { name:"CatBoyNoou3h", tests:[{tier:"LT2", mode:"Sword"},{tier:"LT2", mode:"Diamond SMP"}] },
+  { name:"otonashizero17", tests:[{tier:"HT4", mode:"Mace"},{tier:"HT5-LT4", mode:"Diamond SMP"}] },
+  { name:"SolarFX", tests:[{tier:"HT1", mode:"Redstone"}] },
+  { name:"sadbeacon1110", tests:[{tier:"LT1", mode:"Mace"},{tier:"LT2", mode:"Diamond SMP"},{tier:"HT3", mode:"Sword"},{tier:"HT3", mode:"Crystal Combat"}] },
+  { name:"432Q", tests:[{tier:"LT2", mode:"Crystal Combat"}] }
 ];
 
-/* Calculate scores */
-players.forEach(p=>{
-  p.score = p.tests.reduce((sum,t)=>sum+scoreTier(t.tier),0);
-});
+// Compute scores
+players.forEach(p=>p.score = p.tests.reduce((s,t)=>s+pointsFor(t.tier),0));
 players.sort((a,b)=>b.score-a.score);
 
-/* Render */
-const container = document.getElementById("players");
-
-function render(list) {
+// Render
+const container = document.getElementById('players');
+function render(list){
   container.innerHTML="";
   list.forEach(p=>{
-    const card=document.createElement("div");
-    card.className="card";
-
-    card.innerHTML=`
-      <div class="header">
-        <div class="name">${p.name}</div>
-        <div class="score">${p.score} pts</div>
-      </div>
-      ${p.tests.map(t=>{
-        const pts = scoreTier(t.tier);
-        const mainTier = normalizeTier(t.tier).split("-")[0];
-        return `
-          <div class="test">
-            <div class="line">
-              <span class="${mainTier}">${normalizeTier(t.tier)}</span>
-              <span>${t.mode}</span>
-            </div>
-            <div class="meta">${pts} pts</div>
+    const card=document.createElement('div'); card.className='card';
+    const testsHTML = p.tests.map(t=>{
+      const pts = pointsFor(t.tier);
+      const mainTier = normalizeTier(t.tier).split('-')[0]||'';
+      return `<div class="test">
+        <div class="line">
+          <div class="left">
+            <div class="tier ${mainTier}">${normalizeTier(t.tier)}</div>
+            <div class="meta">${t.mode} • ${pts} pts</div>
           </div>
-        `;
-      }).join("")}
-    `;
+          <div class="score">${pts} pts</div>
+        </div>
+      </div>`;
+    }).join('');
+    card.innerHTML = `<div class="header"><div class="name">${p.name}</div><div class="score">${p.score} pts</div></div>${testsHTML}`;
     container.appendChild(card);
   });
 }
-
 render(players);
 
-/* Search */
-document.getElementById("searchInput").addEventListener("input",e=>{
-  const q=e.target.value.toLowerCase();
-  render(players.filter(p=>p.name.toLowerCase().includes(q)));
+// Search
+document.getElementById('searchInput').addEventListener('input', e=>{
+  const q = e.target.value.toLowerCase();
+  if(!q) render(players);
+  else render(players.filter(p=>p.name.toLowerCase().includes(q)));
 });
 </script>
 
