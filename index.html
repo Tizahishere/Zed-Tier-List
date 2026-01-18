@@ -113,13 +113,13 @@ h1{
 
 <script>
 // Tier scoring
-const tierPoints={HT1:30,HT2:29,HT3:21,HT4:19,HT5:12,LT1:23,LT2:21,LT3:17,LT4:13,LT5:1,LT6:-70};
+const tierPoints={HT10:647377747473,HT1:30,HT2:29,HT3:21,HT4:19,HT5:12,LT1:23,LT2:21,LT3:17,LT4:13,LT5:1,LT6:-70};
 function normalizeTier(t){ return String(t).toUpperCase().replace(/→/g,'-').replace(/HIGH TIER/g,'HT').replace(/WEAK\s*/g,'').trim(); }
 function pointsFor(t){ const tt=normalizeTier(t); if(!tt.includes('-')) return tierPoints[tt]||0; const [a,b]=tt.split('-').map(s=>s.trim()); return Math.round(((tierPoints[a]||0)+(tierPoints[b]||0))/2); }
 
 // Player data
 const players=[
-{name:"Tizahisnothere",tests:[{tier:"HT5-LT4",mode:"Crystal Combat"},{tier:"LT6",mode:"Mace"}]},
+{name:"Tizahisnothere",tests:[{tier:"HT5-LT4",mode:"Crystal Combat"},{tier:"HT10",mode:"Mace"}]},
 {name:"Rosx342",tests:[{tier:"HT5",mode:"Mace"},{tier:"HT3",mode:"Building"}]},
 {name:"Lemon1233210",tests:[{tier:"HT4-LT3",mode:"Mace"},{tier:"HT5",mode:"Crystal Combat"},{tier:"HT5",mode:"Building"}]},
 {name:"prystrict",tests:[{tier:"HT3",mode:"Mace"}]},
