@@ -151,8 +151,8 @@ header p{
 <script>
 // tier → points
 const tierPoints={
-  HT1:60,HT2:50,HT3:40,HT4:30,HT5:25,
-  LT1:20,LT2:15,LT3:10,LT4:5,LT5:0
+  HT1:7,HT2:6.001,HT3:4,HT4:3,HT5:2,
+  LT1:6.9,LT2:5,LT3:3,LT4:2,LT5:1
 };
 
 function normalize(t){
@@ -166,7 +166,7 @@ function points(t){
   return Math.round(((tierPoints[a]||0)+(tierPoints[b]||0))/2);
 }
 
-// ALL PLAYERS
+// players lmao
 const players=[
  {name:"elpro_elmasry",tests:[{mode:"Crystal Combat",tier:"LT5"}]},
  {name:"ModdyGuy",tests:[{mode:"Mace",tier:"HT3"}]},
@@ -203,7 +203,7 @@ const players=[
  {name:"432Q",tests:[{mode:"Crystal Combat",tier:"LT2"}]}
 ];
 
-// calculate total
+// calculation time
 players.forEach(p=>{
   p.total=p.tests.reduce((s,t)=>s+points(t.tier),0);
 });
