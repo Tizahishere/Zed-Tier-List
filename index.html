@@ -1,124 +1,127 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ZED Tier List</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zed tier list</title>
 
 <style>
-:root {
-  --bg: #0b0e14;
-  --card: #121726;
-  --accent: #7c8cff;
-  --text: #e9ecff;
+:root{
+  --bg:#070913;
+  --card:#141a3a;
+  --accent:#6f7cff;
+  --text:#e9ecff;
+  --muted:#9aa0c2;
 }
 
-* { box-sizing: border-box; }
+*{box-sizing:border-box}
 
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-  background: radial-gradient(circle at top, #101428, #07090f);
-  color: var(--text);
+body{
+  margin:0;
+  font-family:system-ui,sans-serif;
+  background:radial-gradient(circle at top,#12195a,#050712);
+  color:var(--text);
 }
 
-header {
-  text-align: center;
-  padding: 40px 20px;
+header{
+  text-align:center;
+  padding:40px 20px 20px;
 }
 
-header h1 {
-  font-size: 2.5rem;
-  letter-spacing: 1px;
+header h1{
+  font-size:2.6rem;
+  margin:0;
 }
 
-header p {
-  opacity: 0.8;
+header p{
+  opacity:.7;
+  margin-top:6px;
 }
 
-.search {
-  max-width: 400px;
-  margin: 20px auto;
+.search{
+  max-width:420px;
+  margin:25px auto;
 }
 
-.search input {
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  background: #0f1424;
-  color: white;
-  font-size: 14px;
+.search input{
+  width:100%;
+  padding:12px 14px;
+  border-radius:14px;
+  border:none;
+  background:#0e1435;
+  color:white;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  padding: 30px;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:22px;
+  padding:30px;
+  max-width:1300px;
+  margin:auto;
 }
 
-.card {
-  background: linear-gradient(160deg, #151b30, #0c1020);
-  border-radius: 18px;
-  padding: 20px;
-  cursor: pointer;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  transition: transform .25s ease, box-shadow .25s ease;
+.card{
+  background:linear-gradient(160deg,#1b2258,#0c1028);
+  border-radius:18px;
+  padding:20px;
+  cursor:pointer;
+  box-shadow:0 10px 30px rgba(0,0,0,.6);
+  transition:.25s;
 }
 
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 0 30px rgba(124,140,255,0.4);
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 0 30px rgba(111,124,255,.55);
 }
 
-.card h3 {
-  margin: 0 0 8px;
+.card h3{
+  margin:0;
 }
 
-.pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+.score{
+  font-weight:800;
+  color:var(--accent);
+  margin:6px 0 12px;
 }
 
-.pill {
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  background: #1c2342;
+.pills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
 }
 
-/* MODAL */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display: none;
-  align-items: center;
-  justify-content: center;
+.pill{
+  padding:5px 11px;
+  border-radius:999px;
+  font-size:12px;
+  background:#1b2355;
 }
 
-.modal.active { display: flex; }
-
-.modal-box {
-  background: #0f1428;
-  border-radius: 18px;
-  padding: 24px;
-  width: 90%;
-  max-width: 420px;
-  animation: pop .25s ease;
+/* modal */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  display:none;
+  align-items:center;
+  justify-content:center;
 }
 
-@keyframes pop {
-  from { transform: scale(.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+.modal.active{display:flex}
+
+.modal-box{
+  background:#0f1435;
+  border-radius:20px;
+  padding:24px;
+  width:90%;
+  max-width:460px;
 }
 
-.close {
-  float: right;
-  cursor: pointer;
-  opacity: .6;
+.close{
+  float:right;
+  cursor:pointer;
+  opacity:.7;
 }
 </style>
 </head>
@@ -126,10 +129,11 @@ header p {
 <body>
 
 <header>
-  <h1>ZED Tier List</h1>
-  <p>Made for fun — small competitive tier list</p>
+  <h1>Zed tier list</h1>
+  <p>a funny tier list made for fun, don’t cry if you’re low tier</p>
+
   <div class="search">
-    <input id="search" placeholder="Search player..." />
+    <input id="search" placeholder="Search player...">
   </div>
 </header>
 
@@ -139,53 +143,109 @@ header p {
   <div class="modal-box">
     <span class="close" onclick="closeModal()">✕</span>
     <h2 id="m-name"></h2>
+    <p id="m-score"></p>
     <div id="m-tests"></div>
   </div>
 </div>
 
 <script>
-const API_URL = "https://YOUR-API-URL/ranks";
-
-let players = [];
-
-fetch(API_URL)
-  .then(res => res.json())
-  .then(data => {
-    players = data;
-    render(players);
-  });
-
-const grid = document.getElementById("grid");
-
-function render(list) {
-  grid.innerHTML = "";
-  list.forEach(p => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <h3>${p.username}</h3>
-      <div class="pills">
-        ${p.tests.map(t => `<span class="pill">${t.gamemode} · ${t.tier}</span>`).join("")}
-      </div>
-    `;
-    card.onclick = () => openModal(p);
-    grid.appendChild(card);
-  });
-}
-
-document.getElementById("search").oninput = e => {
-  const v = e.target.value.toLowerCase();
-  render(players.filter(p => p.username.toLowerCase().includes(v)));
+// tier → points
+const tierPoints={
+  HT1:60,HT2:50,HT3:40,HT4:30,HT5:25,
+  LT1:20,LT2:15,LT3:10,LT4:5,LT5:0
 };
 
-function openModal(p) {
-  document.getElementById("m-name").innerText = p.username;
-  document.getElementById("m-tests").innerHTML =
-    p.tests.map(t => `<p><b>${t.gamemode}</b>: ${t.tier}</p>`).join("");
-  document.getElementById("modal").classList.add("active");
+function normalize(t){
+  return t.toUpperCase().replace("→","-").replace(/\s/g,"");
 }
 
-function closeModal() {
+function points(t){
+  const n=normalize(t);
+  if(!n.includes("-")) return tierPoints[n] ?? 0;
+  const [a,b]=n.split("-");
+  return Math.round(((tierPoints[a]||0)+(tierPoints[b]||0))/2);
+}
+
+// ALL PLAYERS
+const players=[
+ {name:"elpro_elmasry",tests:[{mode:"Crystal Combat",tier:"LT5"}]},
+ {name:"ModdyGuy",tests:[{mode:"Mace",tier:"HT3"}]},
+ {name:"raveiaW4Ck35",tests:[{mode:"Mace",tier:"LT3"},{mode:"Diamond SMP",tier:"HT2"}]},
+ {name:"Liquidify",tests:[{mode:"Mace",tier:"HT4"}]},
+ {name:"MalekXMine",tests:[{mode:"Crystal Combat",tier:"HT4"}]},
+ {name:"Tizahisnothere",tests:[{mode:"Crystal Combat",tier:"HT5-LT4"},{mode:"Mace",tier:"HT5"}]},
+ {name:"Rosx342",tests:[{mode:"Mace",tier:"HT5"},{mode:"Building",tier:"HT3"}]},
+ {name:"Lemon1233210",tests:[
+   {mode:"Mace",tier:"HT4-LT3"},
+   {mode:"Crystal Combat",tier:"HT5"},
+   {mode:"Building",tier:"HT5"}
+ ]},
+ {name:"prystrict",tests:[{mode:"Mace",tier:"HT3"}]},
+ {name:"Carti_v2",tests:[{mode:"Diamond SMP",tier:"HT5"},{mode:"Sword",tier:"HT5"}]},
+ {name:"EnderBeacon",tests:[{mode:"Diamond SMP",tier:"HT5-LT4"},{mode:"Mace",tier:"LT1"}]},
+ {name:"ItsDawaldo",tests:[
+   {mode:"Crystal Combat",tier:"HT2"},
+   {mode:"Sword",tier:"HT3"},
+   {mode:"SMP",tier:"HT4"}
+ ]},
+ {name:"NiklasSpvp",tests:[{mode:"Mace",tier:"LT4"},{mode:"Crystal Combat",tier:"HT3"}]},
+ {name:"N0TR1XX",tests:[{mode:"Mace",tier:"HT2"}]},
+ {name:"Ikaris_",tests:[{mode:"Mace",tier:"HT4-LT3"}]},
+ {name:"CatBoyNoou3h",tests:[{mode:"Sword",tier:"LT2"},{mode:"Diamond SMP",tier:"LT2"}]},
+ {name:"otonashizero17",tests:[{mode:"Mace",tier:"HT4"},{mode:"Diamond SMP",tier:"HT5-LT4"}]},
+ {name:"SolarFX",tests:[{mode:"Redstone",tier:"HT1"},{mode:"Mace",tier:"LT5"}]},
+ {name:"sadbeacon1110",tests:[
+   {mode:"Mace",tier:"LT1"},
+   {mode:"Diamond SMP",tier:"LT2"},
+   {mode:"Sword",tier:"HT3"},
+   {mode:"Crystal Combat",tier:"HT3"}
+ ]},
+ {name:"432Q",tests:[{mode:"Crystal Combat",tier:"LT2"}]}
+];
+
+// calculate total
+players.forEach(p=>{
+  p.total=p.tests.reduce((s,t)=>s+points(t.tier),0);
+});
+
+// sort by points
+players.sort((a,b)=>b.total-a.total);
+
+const grid=document.getElementById("grid");
+
+function render(list){
+  grid.innerHTML="";
+  list.forEach(p=>{
+    const c=document.createElement("div");
+    c.className="card";
+    c.innerHTML=`
+      <h3>${p.name}</h3>
+      <div class="score">${p.total} pts</div>
+      <div class="pills">
+        ${p.tests.map(t=>`<span class="pill">${t.mode} · ${t.tier}</span>`).join("")}
+      </div>
+    `;
+    c.onclick=()=>openModal(p);
+    grid.appendChild(c);
+  });
+}
+
+render(players);
+
+document.getElementById("search").oninput=e=>{
+  const q=e.target.value.toLowerCase();
+  render(players.filter(p=>p.name.toLowerCase().includes(q)));
+};
+
+function openModal(p){
+  document.getElementById("modal").classList.add("active");
+  document.getElementById("m-name").innerText=p.name;
+  document.getElementById("m-score").innerText=`Total: ${p.total} points`;
+  document.getElementById("m-tests").innerHTML=
+    p.tests.map(t=>`<p><b>${t.mode}</b> — ${t.tier} (${points(t.tier)} pts)</p>`).join("");
+}
+
+function closeModal(){
   document.getElementById("modal").classList.remove("active");
 }
 </script>
