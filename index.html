@@ -12,7 +12,6 @@
   --accent:#6f7cff;
   --danger:#ff5c5c;
   --text:#e9ecff;
-  --muted:#9aa0c2;
 }
 
 *{box-sizing:border-box}
@@ -24,127 +23,67 @@ body{
   color:var(--text);
 }
 
-header{
-  text-align:center;
-  padding:40px 20px 20px;
-}
+header{text-align:center;padding:40px 20px 20px}
+header h1{font-size:2.6rem;margin:0}
+header p{opacity:.7;margin-top:6px}
 
-header h1{
-  font-size:2.6rem;
-  margin:0;
-}
-
-header p{
-  opacity:.7;
-  margin-top:6px;
-}
-
-.search{
-  max-width:420px;
-  margin:25px auto;
-}
-
+.search{max-width:420px;margin:25px auto}
 .search input{
-  width:100%;
-  padding:12px 14px;
-  border-radius:14px;
-  border:none;
-  background:#0e1435;
-  color:white;
+  width:100%;padding:12px 14px;border-radius:14px;
+  border:none;background:#0e1435;color:white
 }
 
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
-  gap:22px;
-  padding:30px;
-  max-width:1300px;
-  margin:auto;
+  gap:22px;padding:30px;max-width:1300px;margin:auto
 }
 
 .card{
   background:linear-gradient(160deg,#1b2258,#0c1028);
-  border-radius:18px;
-  padding:20px;
-  cursor:pointer;
+  border-radius:18px;padding:20px;cursor:pointer;
   box-shadow:0 10px 30px rgba(0,0,0,.6);
-  transition:.25s;
+  transition:.25s
 }
-
 .card:hover{
   transform:translateY(-6px);
-  box-shadow:0 0 30px rgba(111,124,255,.55);
+  box-shadow:0 0 30px rgba(111,124,255,.55)
 }
-
 .card.blacklisted{
   border:2px solid var(--danger);
-  box-shadow:0 0 25px rgba(255,92,92,.6);
+  box-shadow:0 0 25px rgba(255,92,92,.6)
 }
 
-.score{
-  font-weight:800;
-  color:var(--accent);
-  margin:6px 0 12px;
-}
+.score{font-weight:800;color:var(--accent);margin:6px 0 12px}
+.score.blacklisted{color:var(--danger)}
 
-.score.blacklisted{
-  color:var(--danger);
-}
-
-.pills{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-}
-
+.pills{display:flex;flex-wrap:wrap;gap:6px}
 .pill{
-  padding:5px 11px;
-  border-radius:999px;
-  font-size:12px;
-  background:#1b2355;
+  padding:5px 11px;border-radius:999px;
+  font-size:12px;background:#1b2355
 }
 
 .modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.75);
-  display:none;
-  align-items:center;
-  justify-content:center;
+  position:fixed;inset:0;background:rgba(0,0,0,.75);
+  display:none;align-items:center;justify-content:center
 }
-
 .modal.active{display:flex}
 
 .modal-box{
-  background:#0f1435;
-  border-radius:20px;
-  padding:24px;
-  width:90%;
-  max-width:460px;
+  background:#0f1435;border-radius:20px;
+  padding:24px;width:90%;max-width:460px
 }
-
-.close{
-  float:right;
-  cursor:pointer;
-  opacity:.7;
-}
+.close{float:right;cursor:pointer;opacity:.7}
 
 .discord-btn{
-  display:inline-block;
-  margin:25px auto 0;
-  padding:14px 28px;
-  border-radius:16px;
-  font-size:16px;
-  font-weight:800;
-  color:white;
-  text-decoration:none;
+  display:inline-block;margin-top:20px;
+  padding:14px 28px;border-radius:16px;
+  font-weight:800;color:white;text-decoration:none;
   background:linear-gradient(135deg,#5865F2,#7c8cff);
   box-shadow:0 0 18px rgba(124,140,255,.6);
-  transition:.25s;
+  transition:.25s
 }
-.discord-btn:hover{
-  transform:translateY(-3px) scale(1.05);
-}
+.discord-btn:hover{transform:translateY(-3px) scale(1.05)}
 </style>
 </head>
 
@@ -177,14 +116,12 @@ header p{
 <script>
 // tier → points
 const tierPoints={
-  HT1:7, HT2:6, HT3:4, HT4:3, HT5:2,
-  LT1:6.9, LT2:5, LT3:3, LT4:1, LT5:1,
+  HT1:7,HT2:6,HT3:4,HT4:3,HT5:2,
+  LT1:6.9,LT2:5,LT3:3,LT4:1,LT5:1,LT6:-5,
 
-  // Fun Tiers lol
+// Lmao bye bye points
   ILLEGAL:-50,
-  FBI:50,
   GOD:100,
-  DOG:-10,
   NPC:0,
 
   // blacklist
@@ -197,40 +134,100 @@ const modeMultiplier={
 };
 
 function normalize(t){
-  return t.toUpperCase().replace(/\s/g,"");
+  return t.toUpperCase().replace("→","-").replace(/\s/g,"");
 }
 
 function points(tier,mode){
   const n=normalize(tier);
-  let base=tierPoints[n]??0;
-  const mult=modeMultiplier[mode]??1;
-  return Math.round(base*mult*10)/10;
+
+  let base;
+  if(n.includes("-")){
+    const [a,b]=n.split("-");
+    base=((tierPoints[a]||0)+(tierPoints[b]||0))/2;
+  }else{
+    base=tierPoints[n]??0;
+  }
+
+  return Math.round(base*(modeMultiplier[mode]??1)*10)/10;
 }
 
-// players
+// FULL RESTORED PLAYERS
 const players=[
  {name:"raveLS80JNO",tests:[{mode:"Gone",tier:"BLACKLISTED"}]},
- {name:"elpro_elmasry",tests:[{mode:"Crystal Combat",tier:"LT5"},{mode:"Mace",tier:"HT5"}]},
- {name:"ModdyGuy",tests:[{mode:"Mace",tier:"HT3"},{mode:"Diamond SMP",tier:"HT2"}]},
- {name:"Liquidify",tests:[{mode:"Mace",tier:"HT4"}]},
- {name:"MalekXMine",tests:[{mode:"Crystal Combat",tier:"HT4"}]},
- {name:"Tizahisnothere",tests:[{mode:"Crystal Combat",tier:"HT5"},{mode:"Mace",tier:"HT5"}]},
- {name:"Rosx342",tests:[{mode:"Mace",tier:"HT5"},{mode:"Building",tier:"HT3"}]},
+ {name:"elpro_elmasry",tests:[
+   {mode:"Crystal Combat",tier:"LT5"},
+   {mode:"Mace",tier:"HT5"}
+ ]},
+ {name:"ModdyGuy",tests:[
+   {mode:"Mace",tier:"HT3"},
+   {mode:"Diamond SMP",tier:"HT2"}
+ ]},
+ {name:"Liquidify",tests:[
+   {mode:"Mace",tier:"HT4"},
+   {mode:"Crystal Combat",tier:"HT5"}
+ ]},
+ {name:"MalekXMine",tests:[
+   {mode:"Crystal Combat",tier:"HT4"},
+   {mode:"Mace",tier:"HT3"}
+ ]},
+ {name:"Tizahisnothere",tests:[
+   {mode:"Crystal Combat",tier:"HT5-LT4"},
+   {mode:"Mace",tier:"HT5"}
+ ]},
+ {name:"Rosx342",tests:[
+   {mode:"Mace",tier:"HT5"},
+   {mode:"Building",tier:"HT3"}
+ ]},
+ {name:"Lemon1233210",tests:[
+   {mode:"Mace",tier:"HT4-LT3"},
+   {mode:"Crystal Combat",tier:"HT5"},
+   {mode:"Building",tier:"HT5"}
+ ]},
  {name:"prystrict",tests:[{mode:"Mace",tier:"HT3"}]},
- {name:"Carti_v2",tests:[{mode:"Sword",tier:"HT5"}]},
- {name:"EnderBeacon",tests:[{mode:"Mace",tier:"LT1"}]},
- {name:"NiklasSpvp",tests:[{mode:"Mace",tier:"LT4"}]},
- {name:"otonashizero17",tests:[{mode:"Mace",tier:"HT4"}]},
- {name:"SolarFlare1110",tests:[{mode:"Redstone",tier:"HT1"}]},
- {name:"sadbeacon1110",tests:[{mode:"Mace",tier:"ILLEGAL"}]},
- {name:"432Q",tests:[{mode:"Crystal Combat",tier:"NPC"}]}
+ {name:"Carti_v2",tests:[
+   {mode:"Diamond SMP",tier:"HT5"},
+   {mode:"Sword",tier:"HT5"}
+ ]},
+ {name:"EnderBeacon",tests:[
+   {mode:"Diamond SMP",tier:"HT5-LT4"},
+   {mode:"Mace",tier:"LT1"}
+ ]},
+ {name:"ItsDawaldo",tests:[
+   {mode:"Crystal Combat",tier:"HT2"},
+   {mode:"Sword",tier:"HT3"},
+   {mode:"Diamond SMP",tier:"HT4"}
+ ]},
+ {name:"NiklasSpvp",tests:[
+   {mode:"Mace",tier:"LT4"},
+   {mode:"Crystal Combat",tier:"HT3"}
+ ]},
+ {name:"N0TR1XX",tests:[{mode:"Mace",tier:"HT2"}]},
+ {name:"Ikaris_",tests:[{mode:"Mace",tier:"HT4-LT3"}]},
+ {name:"CatBoyNoou3h",tests:[
+   {mode:"Sword",tier:"LT2"},
+   {mode:"Diamond SMP",tier:"LT2"}
+ ]},
+ {name:"otonashizero17",tests:[
+   {mode:"Mace",tier:"HT4"},
+   {mode:"Diamond SMP",tier:"HT5-LT4"}
+ ]},
+ {name:"SolarFlare1110",tests:[
+   {mode:"Redstone",tier:"HT1"},
+   {mode:"Building",tier:"LT1"}
+ ]},
+ {name:"sadbeacon1110",tests:[
+   {mode:"Mace",tier:"LT1"},
+   {mode:"Diamond SMP",tier:"LT2"},
+   {mode:"Sword",tier:"HT3"},
+   {mode:"Crystal Combat",tier:"HT2"}
+ ]},
+ {name:"432Q",tests:[{mode:"Crystal Combat",tier:"LT2"}]}
 ];
 
-// calculate totals
+// calculate
 players.forEach(p=>{
   if(p.tests.some(t=>normalize(t.tier)==="BLACKLISTED")){
-    p.total=-9999;
-    p.blacklisted=true;
+    p.total=-9999;p.blacklisted=true;
   }else{
     p.total=p.tests.reduce((s,t)=>s+points(t.tier,t.mode),0);
     p.blacklisted=false;
@@ -260,7 +257,6 @@ function render(list){
     grid.appendChild(c);
   });
 }
-
 render(players);
 
 document.getElementById("search").oninput=e=>{
@@ -269,18 +265,14 @@ document.getElementById("search").oninput=e=>{
 };
 
 function openModal(p){
-  document.getElementById("modal").classList.add("active");
-  document.getElementById("m-name").innerText=p.name;
-  document.getElementById("m-score").innerText=
-    p.blacklisted?"BLACKLISTED 🚫":`Total: ${p.total} points`;
-
-  document.getElementById("m-tests").innerHTML=
-    p.tests.map(t=>`<p><b>${t.mode}</b> — ${t.tier} (${points(t.tier,t.mode)} pts)</p>`).join("");
+  modal.classList.add("active");
+  m-name.innerText=p.name;
+  m-score.innerText=p.blacklisted?"BLACKLISTED 🚫":`Total: ${p.total} points`;
+  m-tests.innerHTML=p.tests.map(t=>
+    `<p><b>${t.mode}</b> — ${t.tier} (${points(t.tier,t.mode)} pts)</p>`
+  ).join("");
 }
-
-function closeModal(){
-  document.getElementById("modal").classList.remove("active");
-}
+function closeModal(){modal.classList.remove("active")}
 </script>
 
 </body>
