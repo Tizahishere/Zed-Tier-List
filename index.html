@@ -189,16 +189,31 @@ const tierPoints={
   LT1:6.9,LT2:5,LT3:3,LT4:1,LT5:1
 };
 
+const modeMultiplier = {
+  "Redstone": 0.2,
+  "Building": 0.25
+};
+
+
 function normalize(t){
   return t.toUpperCase().replace("→","-").replace(/\s/g,"");
 }
 
-function points(t){
-  const n=normalize(t);
-  if(!n.includes("-")) return tierPoints[n] ?? 0;
-  const [a,b]=n.split("-");
-  return Math.round(((tierPoints[a]||0)+(tierPoints[b]||0))/2);
+function points(tier, mode){
+  const n = normalize(tier);
+
+  let base;
+  if(!n.includes("-")){
+    base = tierPoints[n] ?? 0;
+  } else {
+    const [a,b] = n.split("-");
+    base = ((tierPoints[a]||0)+(tierPoints[b]||0))/2;
+  }
+
+  const mult = modeMultiplier[mode] ?? 1;
+  return Math.round(base * mult * 10) / 10; // 1 decimal, clean
 }
+
 
 // players lmao
 const players=[
@@ -226,7 +241,7 @@ const players=[
  {name:"Ikaris_",tests:[{mode:"Mace",tier:"HT4-LT3"}]},
  {name:"CatBoyNoou3h",tests:[{mode:"Sword",tier:"LT2"},{mode:"Diamond SMP",tier:"LT2"}]},
  {name:"otonashizero17",tests:[{mode:"Mace",tier:"HT4"},{mode:"Diamond SMP",tier:"HT5-LT4"}]},
- {name:"SolarFlare1110",tests:[{mode:"Redstone",tier:"HT1"},{mode:"Mace",tier:"LT5"},{mode:"Building",tier:"LT1"}]},
+ {name:"SolarFlare1110",tests:[{mode:"Redstone",tier:"HT1"},{mode:"Building",tier:"LT1"}]},
  {name:"sadbeacon1110",tests:[
    {mode:"Mace",tier:"LT1"},
    {mode:"Diamond SMP",tier:"LT2"},
