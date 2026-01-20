@@ -10,6 +10,7 @@
   --bg:#070913;
   --card:#141a3a;
   --accent:#6f7cff;
+  --danger:#ff5c5c;
   --text:#e9ecff;
   --muted:#9aa0c2;
 }
@@ -75,14 +76,19 @@ header p{
   box-shadow:0 0 30px rgba(111,124,255,.55);
 }
 
-.card h3{
-  margin:0;
+.card.blacklisted{
+  border:2px solid var(--danger);
+  box-shadow:0 0 25px rgba(255,92,92,.6);
 }
 
 .score{
   font-weight:800;
   color:var(--accent);
   margin:6px 0 12px;
+}
+
+.score.blacklisted{
+  color:var(--danger);
 }
 
 .pills{
@@ -98,7 +104,6 @@ header p{
   background:#1b2355;
 }
 
-/* modal */
 .modal{
   position:fixed;
   inset:0;
@@ -124,35 +129,22 @@ header p{
   opacity:.7;
 }
 
-  .discord-btn {
-  display: inline-block;
-  margin: 30px auto;
-  padding: 14px 28px;
-  border-radius: 16px;
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  color: #eef0ff;
-  text-decoration: none;
-  background: linear-gradient(135deg, #5865F2, #7c8cff);
-  box-shadow:
-    0 0 12px rgba(124,140,255,0.6),
-    0 8px 24px rgba(0,0,0,0.7);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+.discord-btn{
+  display:inline-block;
+  margin:25px auto 0;
+  padding:14px 28px;
+  border-radius:16px;
+  font-size:16px;
+  font-weight:800;
+  color:white;
+  text-decoration:none;
+  background:linear-gradient(135deg,#5865F2,#7c8cff);
+  box-shadow:0 0 18px rgba(124,140,255,.6);
+  transition:.25s;
 }
-
-.discord-btn:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow:
-    0 0 22px rgba(124,140,255,0.9),
-    0 12px 32px rgba(0,0,0,0.9);
-  filter: brightness(1.15);
+.discord-btn:hover{
+  transform:translateY(-3px) scale(1.05);
 }
-
-.discord-btn:active {
-  transform: scale(0.98);
-}
-
 </style>
 </head>
 
@@ -160,11 +152,11 @@ header p{
 
 <header>
   <h1>Zed tier list</h1>
-  <p>A normal minecraft tier list made for funr</p>
-  <a href="https://discord.gg/MXjkjzWRvd" target="_blank" class="discord-btn">
-  Join the ZED Discord
-</a>
+  <p>Funny Minecraft tier list made for fun</p>
 
+  <a class="discord-btn" href="https://discord.gg/MXjkjzWRvd" target="_blank">
+    Join the ZED Discord
+  </a>
 
   <div class="search">
     <input id="search" placeholder="Search player...">
@@ -185,82 +177,67 @@ header p{
 <script>
 // tier → points
 const tierPoints={
-  HT0:2394939493,HT1:7,HT2:6,HT3:4,HT4:3,HT5:2
-  LT1:6.9,LT2:5,LT3:3,LT4:1,LT5:1,LT6:-43
-  // illegal tiers
-  Blacklisted:0
-  funny:0
+  HT1:7, HT2:6, HT3:4, HT4:3, HT5:2,
+  LT1:6.9, LT2:5, LT3:3, LT4:1, LT5:1,
+
+  // Fun Tiers lol
+  ILLEGAL:-50,
+  FBI:50,
+  GOD:100,
+  DOG:-10,
+  NPC:0,
+
+  // blacklist
+  BLACKLISTED:-9999
 };
 
-const modeMultiplier = {
-  "Redstone": 0.01,
-  "Building": 0.05
+const modeMultiplier={
+  "Redstone":0.01,
+  "Building":0.05
 };
-
 
 function normalize(t){
-  return t.toUpperCase().replace("→","-").replace(/\s/g,"");
+  return t.toUpperCase().replace(/\s/g,"");
 }
 
-function points(tier, mode){
-  const n = normalize(tier);
-
-  let base;
-  if(!n.includes("-")){
-    base = tierPoints[n] ?? 0;
-  } else {
-    const [a,b] = n.split("-");
-    base = ((tierPoints[a]||0)+(tierPoints[b]||0))/2;
-  }
-
-  const mult = modeMultiplier[mode] ?? 1;
-  return Math.round(base * mult * 10) / 10; // 1 decimal, clean
+function points(tier,mode){
+  const n=normalize(tier);
+  let base=tierPoints[n]??0;
+  const mult=modeMultiplier[mode]??1;
+  return Math.round(base*mult*10)/10;
 }
 
-
-// players lmao
+// players
 const players=[
-  {name:"raveLS80JNO",tests:[{mode:"Gone",tier:"Blacklisted"}]},
+ {name:"raveLS80JNO",tests:[{mode:"Gone",tier:"BLACKLISTED"}]},
  {name:"elpro_elmasry",tests:[{mode:"Crystal Combat",tier:"LT5"},{mode:"Mace",tier:"HT5"}]},
  {name:"ModdyGuy",tests:[{mode:"Mace",tier:"HT3"},{mode:"Diamond SMP",tier:"HT2"}]},
- {name:"Liquidify",tests:[{mode:"Mace",tier:"HT4"},{mode:"Crystal Combat",tier:"HT5"}]},
- {name:"MalekXMine",tests:[{mode:"Crystal Combat",tier:"HT4"},{mode:"Mace",tier:"HT3"}]},
- {name:"Tizahisnothere",tests:[{mode:"Crystal Combat",tier:"HT5-LT4"},{mode:"Mace",tier:"HT5"}]},
+ {name:"Liquidify",tests:[{mode:"Mace",tier:"HT4"}]},
+ {name:"MalekXMine",tests:[{mode:"Crystal Combat",tier:"HT4"}]},
+ {name:"Tizahisnothere",tests:[{mode:"Crystal Combat",tier:"HT5"},{mode:"Mace",tier:"HT5"}]},
  {name:"Rosx342",tests:[{mode:"Mace",tier:"HT5"},{mode:"Building",tier:"HT3"}]},
- {name:"Lemon1233210",tests:[
-   {mode:"Mace",tier:"HT4-LT3"},
-   {mode:"Crystal Combat",tier:"HT5"},
-   {mode:"Building",tier:"HT5"}
- ]},
  {name:"prystrict",tests:[{mode:"Mace",tier:"HT3"}]},
- {name:"Carti_v2",tests:[{mode:"Diamond SMP",tier:"HT5"},{mode:"Sword",tier:"HT5"}]},
- {name:"EnderBeacon",tests:[{mode:"Diamond SMP",tier:"HT5-LT4"},{mode:"Mace",tier:"LT1"}]},
- {name:"ItsDawaldo",tests:[
-   {mode:"Crystal Combat",tier:"HT2"},
-   {mode:"Sword",tier:"HT3"},
-   {mode:"SMP",tier:"HT4"}
- ]},
- {name:"NiklasSpvp",tests:[{mode:"Mace",tier:"LT4"},{mode:"Crystal Combat",tier:"HT3"}]},
- {name:"N0TR1XX",tests:[{mode:"Mace",tier:"HT2"}]},
- {name:"Ikaris_",tests:[{mode:"Mace",tier:"HT4-LT3"}]},
- {name:"CatBoyNoou3h",tests:[{mode:"Sword",tier:"LT2"},{mode:"Diamond SMP",tier:"LT2"}]},
- {name:"otonashizero17",tests:[{mode:"Mace",tier:"HT4"},{mode:"Diamond SMP",tier:"HT5-LT4"}]},
- {name:"SolarFlare1110",tests:[{mode:"Redstone",tier:"HT1"},{mode:"Building",tier:"LT1"}]},
- {name:"sadbeacon1110",tests:[
-   {mode:"Mace",tier:"LT1"},
-   {mode:"Diamond SMP",tier:"LT2"},
-   {mode:"Sword",tier:"HT3"},
-   {mode:"Crystal Combat",tier:"HT2"}
- ]},
- {name:"432Q",tests:[{mode:"Crystal Combat",tier:"LT2"}]}
+ {name:"Carti_v2",tests:[{mode:"Sword",tier:"HT5"}]},
+ {name:"EnderBeacon",tests:[{mode:"Mace",tier:"LT1"}]},
+ {name:"NiklasSpvp",tests:[{mode:"Mace",tier:"LT4"}]},
+ {name:"otonashizero17",tests:[{mode:"Mace",tier:"HT4"}]},
+ {name:"SolarFlare1110",tests:[{mode:"Redstone",tier:"HT1"}]},
+ {name:"sadbeacon1110",tests:[{mode:"Mace",tier:"ILLEGAL"}]},
+ {name:"432Q",tests:[{mode:"Crystal Combat",tier:"NPC"}]}
 ];
 
-// calculation time
+// calculate totals
 players.forEach(p=>{
-  p.total=p.tests.reduce((s,t)=>s+points(t.tier),0);
+  if(p.tests.some(t=>normalize(t.tier)==="BLACKLISTED")){
+    p.total=-9999;
+    p.blacklisted=true;
+  }else{
+    p.total=p.tests.reduce((s,t)=>s+points(t.tier,t.mode),0);
+    p.blacklisted=false;
+  }
 });
 
-// sort by points
+// sort
 players.sort((a,b)=>b.total-a.total);
 
 const grid=document.getElementById("grid");
@@ -269,10 +246,12 @@ function render(list){
   grid.innerHTML="";
   list.forEach(p=>{
     const c=document.createElement("div");
-    c.className="card";
+    c.className="card"+(p.blacklisted?" blacklisted":"");
     c.innerHTML=`
       <h3>${p.name}</h3>
-      <div class="score">${p.total} pts</div>
+      <div class="score ${p.blacklisted?"blacklisted":""}">
+        ${p.blacklisted?"BLACKLISTED 🚫":p.total+" pts"}
+      </div>
       <div class="pills">
         ${p.tests.map(t=>`<span class="pill">${t.mode} · ${t.tier}</span>`).join("")}
       </div>
@@ -292,9 +271,11 @@ document.getElementById("search").oninput=e=>{
 function openModal(p){
   document.getElementById("modal").classList.add("active");
   document.getElementById("m-name").innerText=p.name;
-  document.getElementById("m-score").innerText=`Total: ${p.total} points`;
+  document.getElementById("m-score").innerText=
+    p.blacklisted?"BLACKLISTED 🚫":`Total: ${p.total} points`;
+
   document.getElementById("m-tests").innerHTML=
-    p.tests.map(t=>`<p><b>${t.mode}</b> — ${t.tier} (${points(t.tier)} pts)</p>`).join("");
+    p.tests.map(t=>`<p><b>${t.mode}</b> — ${t.tier} (${points(t.tier,t.mode)} pts)</p>`).join("");
 }
 
 function closeModal(){
