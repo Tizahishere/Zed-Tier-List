@@ -185,8 +185,8 @@ header p{
 <script>
 // tier → points
 const tierPoints={
-  HT0:2394939493,HT1:7,HT2:6,HT3:4,HT4:3,HT5:2,
-  LT1:6.9,LT2:5,LT3:3,LT4:1,LT5:1,LT6:-43
+  HT0:2394939493,HT1:7,HT2:6,HT3:4,HT4:3,HT5:2
+  LT1:6.9,LT2:5,LT3:3,LT4:1,LT5:1,LT6:-43,Blacklisted:0
 };
 
 const modeMultiplier = {
@@ -217,6 +217,7 @@ function points(tier, mode){
 
 // players lmao
 const players=[
+  {name:"raveLS80JNO",tests:[{mode:"Cannot Be Loaded",tier:"Blacklisted"}]},
  {name:"elpro_elmasry",tests:[{mode:"Crystal Combat",tier:"LT5"},{mode:"Mace",tier:"HT5"}]},
  {name:"ModdyGuy",tests:[{mode:"Mace",tier:"HT3"},{mode:"Diamond SMP",tier:"HT2"}]},
  {name:"Liquidify",tests:[{mode:"Mace",tier:"HT4"},{mode:"Crystal Combat",tier:"HT5"}]},
