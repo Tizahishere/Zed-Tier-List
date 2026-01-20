@@ -7,83 +7,56 @@
 
 <style>
 :root{
-  --bg:#070913;
-  --card:#141a3a;
   --accent:#6f7cff;
   --danger:#ff5c5c;
   --text:#e9ecff;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:system-ui,sans-serif;
   background:radial-gradient(circle at top,#12195a,#050712);
   color:var(--text);
 }
-
-header{text-align:center;padding:40px 20px 20px}
-header h1{font-size:2.6rem;margin:0}
-header p{opacity:.7;margin-top:6px}
-
-.search{max-width:420px;margin:25px auto}
-.search input{
-  width:100%;padding:12px 14px;border-radius:14px;
-  border:none;background:#0e1435;color:white
-}
-
+header{text-align:center;padding:40px 20px}
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
   gap:22px;padding:30px;max-width:1300px;margin:auto
 }
-
 .card{
   background:linear-gradient(160deg,#1b2258,#0c1028);
   border-radius:18px;padding:20px;cursor:pointer;
   box-shadow:0 10px 30px rgba(0,0,0,.6);
   transition:.25s
 }
-.card:hover{
-  transform:translateY(-6px);
-  box-shadow:0 0 30px rgba(111,124,255,.55)
-}
-.card.blacklisted{
-  border:2px solid var(--danger);
-  box-shadow:0 0 25px rgba(255,92,92,.6)
-}
-
-.score{font-weight:800;color:var(--accent);margin:6px 0 12px}
+.card:hover{transform:translateY(-6px)}
+.card.blacklisted{border:2px solid var(--danger)}
+.score{font-weight:800;color:var(--accent);margin:6px 0}
 .score.blacklisted{color:var(--danger)}
-
 .pills{display:flex;flex-wrap:wrap;gap:6px}
-.pill{
-  padding:5px 11px;border-radius:999px;
-  font-size:12px;background:#1b2355
+.pill{padding:5px 11px;border-radius:999px;font-size:12px;background:#1b2355}
+.search{max-width:420px;margin:20px auto}
+.search input{
+  width:100%;padding:12px;border-radius:14px;
+  border:none;background:#0e1435;color:white
 }
-
 .modal{
   position:fixed;inset:0;background:rgba(0,0,0,.75);
   display:none;align-items:center;justify-content:center
 }
 .modal.active{display:flex}
-
 .modal-box{
   background:#0f1435;border-radius:20px;
   padding:24px;width:90%;max-width:460px
 }
-.close{float:right;cursor:pointer;opacity:.7}
-
+.close{float:right;cursor:pointer}
 .discord-btn{
-  display:inline-block;margin-top:20px;
+  display:inline-block;margin:20px;
   padding:14px 28px;border-radius:16px;
   font-weight:800;color:white;text-decoration:none;
-  background:linear-gradient(135deg,#5865F2,#7c8cff);
-  box-shadow:0 0 18px rgba(124,140,255,.6);
-  transition:.25s
+  background:linear-gradient(135deg,#5865F2,#7c8cff)
 }
-.discord-btn:hover{transform:translateY(-3px) scale(1.05)}
 </style>
 </head>
 
@@ -92,11 +65,7 @@ header p{opacity:.7;margin-top:6px}
 <header>
   <h1>Zed tier list</h1>
   <p>Funny Minecraft tier list made for fun</p>
-
-  <a class="discord-btn" href="https://discord.gg/MXjkjzWRvd" target="_blank">
-    Join the ZED Discord
-  </a>
-
+  <a class="discord-btn" href="https://discord.gg/MXjkjzWRvd" target="_blank">Join the ZED Discord</a>
   <div class="search">
     <input id="search" placeholder="Search player...">
   </div>
@@ -107,134 +76,66 @@ header p{opacity:.7;margin-top:6px}
 <div class="modal" id="modal">
   <div class="modal-box">
     <span class="close" onclick="closeModal()">✕</span>
-    <h2 id="m-name"></h2>
-    <p id="m-score"></p>
-    <div id="m-tests"></div>
+    <h2 id="mName"></h2>
+    <p id="mScore"></p>
+    <div id="mTests"></div>
   </div>
 </div>
 
 <script>
-// tier → points
+// tier points
 const tierPoints={
-  HT1:7,HT2:6,HT3:4,HT4:3,HT5:2,
-  LT1:6.9,LT2:5,LT3:3,LT4:1,LT5:1,LT6:-5,
-
-// Lmao bye bye points
-  ILLEGAL:-50,
-  GOD:100,
-  NPC:0,
-
-  // blacklist
-  BLACKLISTED:-9999
+  HT1:7, HT2:6, HT3:4, HT4:3, HT5:2,
+  LT1:6.9, LT2:5, LT3:3, LT4:1, LT5:1, LT6:-5,
+  GOD:100, ILLEGAL:-50, NPC:0, BLACKLISTED:-9999
 };
 
-const modeMultiplier={
-  "Redstone":0.01,
-  "Building":0.05
-};
+const modeMultiplier={ Redstone:0.01, Building:0.05 };
 
-function normalize(t){
-  return t.toUpperCase().replace("→","-").replace(/\s/g,"");
-}
-
-function points(tier,mode){
-  const n=normalize(tier);
-
-  let base;
-  if(n.includes("-")){
-    const [a,b]=n.split("-");
-    base=((tierPoints[a]||0)+(tierPoints[b]||0))/2;
-  }else{
-    base=tierPoints[n]??0;
-  }
-
-  return Math.round(base*(modeMultiplier[mode]??1)*10)/10;
-}
-
-// FULL RESTORED PLAYERS
 const players=[
  {name:"raveLS80JNO",tests:[{mode:"Gone",tier:"BLACKLISTED"}]},
- {name:"elpro_elmasry",tests:[
-   {mode:"Crystal Combat",tier:"LT5"},
-   {mode:"Mace",tier:"HT5"}
- ]},
- {name:"ModdyGuy",tests:[
-   {mode:"Mace",tier:"HT3"},
-   {mode:"Diamond SMP",tier:"HT2"}
- ]},
- {name:"Liquidify",tests:[
-   {mode:"Mace",tier:"HT4"},
-   {mode:"Crystal Combat",tier:"HT5"}
- ]},
- {name:"MalekXMine",tests:[
-   {mode:"Crystal Combat",tier:"HT4"},
-   {mode:"Mace",tier:"HT3"}
- ]},
- {name:"Tizahisnothere",tests:[
-   {mode:"Crystal Combat",tier:"HT5-LT4"},
-   {mode:"Mace",tier:"HT5"}
- ]},
- {name:"Rosx342",tests:[
-   {mode:"Mace",tier:"HT5"},
-   {mode:"Building",tier:"HT3"}
- ]},
- {name:"Lemon1233210",tests:[
-   {mode:"Mace",tier:"HT4-LT3"},
-   {mode:"Crystal Combat",tier:"HT5"},
-   {mode:"Building",tier:"HT5"}
- ]},
+ {name:"elpro_elmasry",tests:[{mode:"Crystal Combat",tier:"LT5"},{mode:"Mace",tier:"HT5"}]},
+ {name:"ModdyGuy",tests:[{mode:"Mace",tier:"HT3"},{mode:"Diamond SMP",tier:"HT2"}]},
+ {name:"Liquidify",tests:[{mode:"Mace",tier:"HT4"},{mode:"Crystal Combat",tier:"HT5"}]},
+ {name:"MalekXMine",tests:[{mode:"Crystal Combat",tier:"HT4"},{mode:"Mace",tier:"HT3"}]},
+ {name:"Tizahisnothere",tests:[{mode:"Crystal Combat",tier:"HT5-LT4"},{mode:"Mace",tier:"HT5"}]},
+ {name:"Rosx342",tests:[{mode:"Mace",tier:"HT5"},{mode:"Building",tier:"HT3"}]},
+ {name:"Lemon1233210",tests:[{mode:"Mace",tier:"HT4-LT3"},{mode:"Crystal Combat",tier:"HT5"},{mode:"Building",tier:"HT5"}]},
  {name:"prystrict",tests:[{mode:"Mace",tier:"HT3"}]},
- {name:"Carti_v2",tests:[
-   {mode:"Diamond SMP",tier:"HT5"},
-   {mode:"Sword",tier:"HT5"}
- ]},
- {name:"EnderBeacon",tests:[
-   {mode:"Diamond SMP",tier:"HT5-LT4"},
-   {mode:"Mace",tier:"LT1"}
- ]},
- {name:"ItsDawaldo",tests:[
-   {mode:"Crystal Combat",tier:"HT2"},
-   {mode:"Sword",tier:"HT3"},
-   {mode:"Diamond SMP",tier:"HT4"}
- ]},
- {name:"NiklasSpvp",tests:[
-   {mode:"Mace",tier:"LT4"},
-   {mode:"Crystal Combat",tier:"HT3"}
- ]},
+ {name:"Carti_v2",tests:[{mode:"Diamond SMP",tier:"HT5"},{mode:"Sword",tier:"HT5"}]},
+ {name:"EnderBeacon",tests:[{mode:"Diamond SMP",tier:"HT5-LT4"},{mode:"Mace",tier:"LT1"}]},
+ {name:"ItsDawaldo",tests:[{mode:"Crystal Combat",tier:"HT2"},{mode:"Sword",tier:"HT3"},{mode:"Diamond SMP",tier:"HT4"}]},
+ {name:"NiklasSpvp",tests:[{mode:"Mace",tier:"LT4"},{mode:"Crystal Combat",tier:"HT3"}]},
  {name:"N0TR1XX",tests:[{mode:"Mace",tier:"HT2"}]},
  {name:"Ikaris_",tests:[{mode:"Mace",tier:"HT4-LT3"}]},
- {name:"CatBoyNoou3h",tests:[
-   {mode:"Sword",tier:"LT2"},
-   {mode:"Diamond SMP",tier:"LT2"}
- ]},
- {name:"otonashizero17",tests:[
-   {mode:"Mace",tier:"HT4"},
-   {mode:"Diamond SMP",tier:"HT5-LT4"}
- ]},
- {name:"SolarFlare1110",tests:[
-   {mode:"Redstone",tier:"HT1"},
-   {mode:"Building",tier:"LT1"}
- ]},
- {name:"sadbeacon1110",tests:[
-   {mode:"Mace",tier:"LT1"},
-   {mode:"Diamond SMP",tier:"LT2"},
-   {mode:"Sword",tier:"HT3"},
-   {mode:"Crystal Combat",tier:"HT2"}
- ]},
+ {name:"CatBoyNoou3h",tests:[{mode:"Sword",tier:"LT2"},{mode:"Diamond SMP",tier:"LT2"}]},
+ {name:"otonashizero17",tests:[{mode:"Mace",tier:"HT4"},{mode:"Diamond SMP",tier:"HT5-LT4"}]},
+ {name:"SolarFlare1110",tests:[{mode:"Redstone",tier:"HT1"},{mode:"Building",tier:"LT1"}]},
+ {name:"sadbeacon1110",tests:[{mode:"Mace",tier:"LT1"},{mode:"Diamond SMP",tier:"LT2"},{mode:"Sword",tier:"HT3"},{mode:"Crystal Combat",tier:"HT2"}]},
  {name:"432Q",tests:[{mode:"Crystal Combat",tier:"LT2"}]}
 ];
 
-// calculate
+function normalize(t){return t.toUpperCase().replace(/\s/g,"")}
+
+function calcPoints(tier,mode){
+  if(tier==="BLACKLISTED") return -9999;
+  let base;
+  if(tier.includes("-")){
+    const [a,b]=tier.split("-");
+    base=((tierPoints[a]||0)+(tierPoints[b]||0))/2;
+  } else base=tierPoints[tier]||0;
+  return Math.round(base*(modeMultiplier[mode]||1)*10)/10;
+}
+
 players.forEach(p=>{
-  if(p.tests.some(t=>normalize(t.tier)==="BLACKLISTED")){
+  if(p.tests.some(t=>t.tier==="BLACKLISTED")){
     p.total=-9999;p.blacklisted=true;
-  }else{
-    p.total=p.tests.reduce((s,t)=>s+points(t.tier,t.mode),0);
+  } else {
+    p.total=p.tests.reduce((s,t)=>s+calcPoints(t.tier,t.mode),0);
     p.blacklisted=false;
   }
 });
 
-// sort
 players.sort((a,b)=>b.total-a.total);
 
 const grid=document.getElementById("grid");
@@ -249,9 +150,7 @@ function render(list){
       <div class="score ${p.blacklisted?"blacklisted":""}">
         ${p.blacklisted?"BLACKLISTED 🚫":p.total+" pts"}
       </div>
-      <div class="pills">
-        ${p.tests.map(t=>`<span class="pill">${t.mode} · ${t.tier}</span>`).join("")}
-      </div>
+      <div class="pills">${p.tests.map(t=>`<span class="pill">${t.mode} · ${t.tier}</span>`).join("")}</div>
     `;
     c.onclick=()=>openModal(p);
     grid.appendChild(c);
@@ -265,14 +164,15 @@ document.getElementById("search").oninput=e=>{
 };
 
 function openModal(p){
-  modal.classList.add("active");
-  m-name.innerText=p.name;
-  m-score.innerText=p.blacklisted?"BLACKLISTED 🚫":`Total: ${p.total} points`;
-  m-tests.innerHTML=p.tests.map(t=>
-    `<p><b>${t.mode}</b> — ${t.tier} (${points(t.tier,t.mode)} pts)</p>`
-  ).join("");
+  document.getElementById("modal").classList.add("active");
+  document.getElementById("mName").innerText=p.name;
+  document.getElementById("mScore").innerText=p.blacklisted?"BLACKLISTED 🚫":"Total: "+p.total+" points";
+  document.getElementById("mTests").innerHTML=
+    p.tests.map(t=>`<p><b>${t.mode}</b> — ${t.tier} (${calcPoints(t.tier,t.mode)} pts)</p>`).join("");
 }
-function closeModal(){modal.classList.remove("active")}
+function closeModal(){
+  document.getElementById("modal").classList.remove("active");
+}
 </script>
 
 </body>
